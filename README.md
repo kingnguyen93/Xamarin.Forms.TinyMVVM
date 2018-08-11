@@ -1,13 +1,13 @@
 # TinyMVVM for Xamarin.Forms
 TinyMVVM is a super light MVVM Framework designed specifically for Xamarin.Forms. It's designed to be Easy, Simple and Flexible.
 
-#### How does it compare to other options?
+### How does it compare to other options?
 - It's super light and super simple
 - It's specifically designed for Xamarin.Forms
 - Designed to be easy to learn and develop (great when you are not ready for RxUI)
 - Uses a Convention over Configuration
 
-#### Features
+### Features
 - ViewModel to ViewModel Navigation
 - Automatic wiring of BindingContext
 - Automatic wiring of Page events (eg. appearing)
@@ -17,7 +17,7 @@ TinyMVVM is a super light MVVM Framework designed specifically for Xamarin.Forms
 - Basic methods available in Model, like Alert
 - Built-in Navigation types for SimpleNavigation, Tabbed and MasterDetail
 
-#### Conventions
+### Conventions
 This Framework, while simple, is also powerful and uses a Convention over Configuration style.
 
 - A Page must have a corresponding ViewModel, with naming important so a QuoteViewModel must have a QuotePage. The BindingContext on the page will be automatically set with the Model
@@ -26,7 +26,7 @@ This Framework, while simple, is also powerful and uses a Convention over Config
 - A ViewModel can get multi object from NavigationParameters
 - ViewModel can have dependancies automatically injected into the Constructor
 
-#### Navigation
+### Navigation
 The Primary form of Navigation in TinyMVVM is ViewModel to ViewModel, this essentially means our views have no idea of Navigation.
 
 So to Navigate between ViewModel use:
@@ -80,22 +80,22 @@ The Framework contains some built in Navigation containers for the different typ
 ###### Implementing Custom Navigation
 It's possible to setup any type of Navigation by implementing INavigationService.There's a sample of this in Sample Application named CustomImplementedNav.cs.
 
-#### Sample Apps
+### Sample Apps
 - Basic Navigation Sample
 - Tabbed Navigation Sample
 - MasterDetail Navigation Sample
 - Tabbed Navigation with MasterDetail Popover Sample (This is called the CustomImplementedNav in the Sample App)
 
-#### Inversion of Control (IOC)
+### Inversion of Control (IOC)
 So that you don't need to include your own IoC container, TinyMVVM comes with a IoC Container built-in. It's using TinyIoC underneith.
 
-##### To Register services in the container use Register:
+#### To Register services in the container use Register:
 
 ```csharp
     TinyIoC.Container.Register<IDatabaseService, DatabaseService>();
 ```
 
-##### To obtain a service use Resolve:
+#### To obtain a service use Resolve:
 
 ```csharp
     TinyIoC.Container.Resolve<IDatabaseService>();
@@ -103,7 +103,7 @@ So that you don't need to include your own IoC container, TinyMVVM comes with a 
 
 *This is also what drives constructor injection.
 
-#### IOC Container Lifetime Registration Options
+### IOC Container Lifetime Registration Options
 We now support a fluent API for setting the object lifetime of object inside the IoC Container.
 
 ```csharp
@@ -144,20 +144,20 @@ The interface that's returned from the register methods is IRegisterOptions.
     }
 ```
 
-#### ViewModel - Constructor Injection
-When PageModels are pushed services that are in the IOC container can be pushed into the Constructor.
+### ViewModel - Constructor Injection
+When ViewModels are pushed services that are in the IOC container can be pushed into the Constructor.
 
 ```csharp
     TinyIoC.Container.Register<IDatabaseService, DatabaseService>();
 ```
 
-#### ViewModel Important Methods
+### ViewModel Important Methods
 
 ```csharp
         /// <summary>
-        /// The previous page model, that's automatically filled, on push
+        /// The previous view model, that's automatically filled, on push
         /// </summary>
-        public FreshBasePageModel PreviousViewModel { get; set; }
+        public TinyViewModel PreviousViewModel { get; set; }
     
         /// <summary>
         /// A reference to the current page, that's automatically filled, on push
@@ -167,12 +167,12 @@ When PageModels are pushed services that are in the IOC container can be pushed 
         /// <summary>
         /// Core methods are basic built in methods for the App including Pushing, Pop and Alert
         /// </summary>
-        public IPageModelCoreMethods CoreMethods { get; set; }
+        public IViewModelCoreMethods CoreMethods { get; set; }
     
         /// <summary>
-        /// This method is called when the PageModel is loaded, the initData is the data that's sent from pagemodel before
+        /// This method is called when the ViewModel is loaded, the initData is the data that's sent from ViewModel before
         /// </summary>
-        /// <param name="initData">Data that's sent to this PageModel from the pusher</param>
+        /// <param name="initData">Data that's sent to this ViewModel from the pusher</param>
         public virtual void Init(object initData)
         {
         }
@@ -186,7 +186,7 @@ When PageModels are pushed services that are in the IOC container can be pushed 
         }
     
         /// <summary>
-        /// This method is called when the PageModel is created.
+        /// This method is called when the page is Push'd.
         /// </summary>
         public virtual void OnCreated()
         {
@@ -215,7 +215,7 @@ When PageModels are pushed services that are in the IOC container can be pushed 
 ```
 
 #### The CoreMethods
-Each PageModel has a property called 'CoreMethods' which is automatically filled when a ViewModel is pushed, it's the basic functions that most apps need like Alerts, Pushing, Poping etc.
+Each ViewModel has a property called 'CoreMethods' which is automatically filled when a ViewModel is pushed, it's the basic functions that most apps need like Alerts, Pushing, Poping etc.
 
 ```csharp
     public interface IViewModelCoreMethods
@@ -248,7 +248,7 @@ Below we’re running two navigation stacks, in a single MasterDetail.
     var masterDetailsMultiple = new MasterDetailPage(); //generic master detail page
     
     //we setup the first navigation container with ContactList
-    var contactListPage = ViewModelResolver.ResolveViewModel<ContactListPageModel>();
+    var contactListPage = ViewModelResolver.ResolveViewModel<ContactListViewModel>();
     contactListPage.Title = "Contact List";
     //we setup the first navigation container with name MasterPageArea
     var masterPageArea = new NavigationContainer(contactListPage, "MasterPageArea");
@@ -257,7 +257,7 @@ Below we’re running two navigation stacks, in a single MasterDetail.
     masterDetailsMultiple.Master = masterPageArea; //set the first navigation container to the Master
     
     //we setup the second navigation container with the QuoteList 
-    var quoteListPage = ViewModelResolver.ResolveViewModel<QuoteListPageModel>();
+    var quoteListPage = ViewModelResolver.ResolveViewModel<QuoteListViewModel>();
     quoteListPage.Title = "Quote List";
     //we setup the second navigation container with name DetailPageArea
     var detailPageArea = new FreshNavigationContainer(quoteListPage, "DetailPageArea");
@@ -374,9 +374,9 @@ In the example below, we use any to link up
 
 ```csharp
     [PropertyChanged.AddINotifyPropertyChangedInterface]
-    public class ContactPageModel : TinyViewModel
+    public class ContactViewModel : TinyViewModel
     {
-        public ContactPageModel()
+        public ContactViewModel()
         {
             this.WhenAny(HandleContactChanged, o => o.Contact);
         }
