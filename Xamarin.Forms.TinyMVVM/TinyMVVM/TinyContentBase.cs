@@ -1,7 +1,6 @@
 ﻿using System.Collections.Specialized;
-using Xamarin.Forms;
 
-namespace TinyMVVM
+namespace Xamarin.Forms.TinyMVVM
 {
     public class TinyContentBase : ContentPage
     {

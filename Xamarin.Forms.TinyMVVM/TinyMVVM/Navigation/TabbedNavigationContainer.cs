@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Xamarin.Forms;
 
-namespace TinyMVVM
+namespace Xamarin.Forms.TinyMVVM
 {
     public class TabbedNavigationContainer : TabbedPage, INavigationService
     {

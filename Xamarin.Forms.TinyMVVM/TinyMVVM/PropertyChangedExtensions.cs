@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace TinyMVVM
+namespace Xamarin.Forms.TinyMVVM
 {
     public static class PropertyChangedExtensions
     {

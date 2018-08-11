@@ -1,7 +1,7 @@
 ﻿using System;
 using TinyIoC;
 
-namespace TinyMVVM
+namespace Xamarin.Forms.TinyMVVM
 {
     /// <summary>
     /// Built in TinyIOC for ease of use

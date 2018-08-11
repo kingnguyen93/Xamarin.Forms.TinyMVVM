@@ -1,7 +1,6 @@
 ﻿using System;
-using Xamarin.Forms;
 
-namespace TinyMVVM
+namespace Xamarin.Forms.TinyMVVM
 {
     public static class ViewModelResolver
     {

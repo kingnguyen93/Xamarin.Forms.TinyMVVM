@@ -1,6 +1,4 @@
-﻿using Xamarin.Forms;
-
-namespace TinyMVVM
+﻿namespace Xamarin.Forms.TinyMVVM
 {
     public static class PageExtensions
     {

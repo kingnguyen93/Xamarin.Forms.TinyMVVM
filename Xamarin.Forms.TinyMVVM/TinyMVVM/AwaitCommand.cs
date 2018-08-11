@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace TinyMVVM
+namespace Xamarin.Forms.TinyMVVM
 {
     /// <summary>
     /// AwaitCommand is designed to avoid the double tap issue in Xamarin.Forms for Android,

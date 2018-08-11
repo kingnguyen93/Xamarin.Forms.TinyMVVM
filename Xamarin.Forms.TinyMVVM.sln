@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2047
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinyMVVM", "TinyMVVM\TinyMVVM.csproj", "{0E98AA76-EC0D-4E00-82D5-D9426F85CA24}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.Forms.TinyMVVM", "Xamarin.Forms.TinyMVVM\Xamarin.Forms.TinyMVVM.csproj", "{0E98AA76-EC0D-4E00-82D5-D9426F85CA24}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

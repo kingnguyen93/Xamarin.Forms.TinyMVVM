@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Xamarin.Forms;
 
-namespace TinyMVVM
+namespace Xamarin.Forms.TinyMVVM
 {
     public class NavigationContainer : NavigationPage, INavigationService
     {

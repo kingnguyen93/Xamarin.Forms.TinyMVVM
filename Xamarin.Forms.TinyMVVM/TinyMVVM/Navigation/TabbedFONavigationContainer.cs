@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Xamarin.Forms;
 
-namespace TinyMVVM
+namespace Xamarin.Forms.TinyMVVM
 {
     /// <summary>
     /// This Tabbed navigation container for when you only want the tabs to appear on the first page and then push to a second page without tabs

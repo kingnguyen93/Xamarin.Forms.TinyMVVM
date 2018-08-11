@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using Xamarin.Forms;
 
-namespace TinyMVVM
+namespace Xamarin.Forms.TinyMVVM
 {
     public class TinyViewModel : INotifyPropertyChanged
     {
@@ -41,7 +40,7 @@ namespace TinyMVVM
         /// A reference to the current page, that's automatically filled, on push
         /// </summary>
         public NavigationParameters Parameters { get; set; } = new NavigationParameters();
-        
+
         /// <summary>
         /// Is true when this model is the first of a new navigation stack
         /// </summary>

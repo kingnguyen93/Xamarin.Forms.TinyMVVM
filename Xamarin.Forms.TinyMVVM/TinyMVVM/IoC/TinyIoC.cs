@@ -1,4 +1,4 @@
-﻿namespace TinyMVVM
+﻿namespace Xamarin.Forms.TinyMVVM
 {
     public class TinyIoC
     {
