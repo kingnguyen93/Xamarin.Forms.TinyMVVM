@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <PackageId>Xamarin.Forms.TinyMVVM</PackageId>
+    <PackageId>TinyMVVM</PackageId>
     <PackageVersion>1.0.2</PackageVersion>
     <Authors>King Nguyen</Authors>
     <Description>TinyMVVM library for Xamarin Forms</Description>
