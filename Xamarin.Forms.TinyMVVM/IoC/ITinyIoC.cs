@@ -1,6 +1,7 @@
 ﻿using System;
+using TinyIoC;
 
-namespace TinyIoC
+namespace TinyMVVM
 {
     public interface ITinyIoC
     {

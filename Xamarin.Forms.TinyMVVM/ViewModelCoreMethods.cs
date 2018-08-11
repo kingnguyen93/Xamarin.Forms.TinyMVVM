@@ -8,9 +8,9 @@ namespace TinyMVVM
     public class ViewModelCoreMethods : IViewModelCoreMethods
     {
         private Page currentPage;
-        private BaseViewModel currentViewModel;
+        private TinyViewModel currentViewModel;
 
-        public ViewModelCoreMethods(Page currentPage, BaseViewModel viewModel)
+        public ViewModelCoreMethods(Page currentPage, TinyViewModel viewModel)
         {
             this.currentPage = currentPage;
             currentViewModel = viewModel;
@@ -38,45 +38,45 @@ namespace TinyMVVM
 
         public async Task PushPage<TPage>(bool modal = false, bool animate = true) where TPage : Page
         {
-            TPage page = TinyIoC.TinyIoC.Container.Resolve<TPage>();
+            TPage page = TinyIoC.Container.Resolve<TPage>();
             await PushPage(page);
         }
 
         public async Task PushPage(Type pageType, bool modal = false, bool animate = true)
         {
-            var page = TinyIoC.TinyIoC.Container.Resolve(pageType) as Page;
+            var page = TinyIoC.Container.Resolve(pageType) as Page;
             await PushPage(page);
         }
 
         public async Task PushPage(Page page, bool modal = false, bool animate = true)
         {
-            await TinyIoC.TinyIoC.Container.Resolve<INavigationService>(currentViewModel.CurrentNavigationServiceName).PushPage(page, modal, animate);
+            await TinyIoC.Container.Resolve<INavigationService>(currentViewModel.CurrentNavigationServiceName).PushPage(page, modal, animate);
         }
 
-        public async Task PushViewModel<T>(object data, bool modal = false, bool animate = true) where T : BaseViewModel
+        public async Task PushViewModel<T>(object data, bool modal = false, bool animate = true) where T : TinyViewModel
         {
-            T pageModel = TinyIoC.TinyIoC.Container.Resolve<T>();
+            T pageModel = TinyIoC.Container.Resolve<T>();
             await PushPageModel(pageModel, data, modal, animate);
         }
 
-        public async Task PushViewModel<T>(NavigationParameters parameters, bool modal = false, bool animate = true) where T : BaseViewModel
+        public async Task PushViewModel<T>(NavigationParameters parameters, bool modal = false, bool animate = true) where T : TinyViewModel
         {
-            T pageModel = TinyIoC.TinyIoC.Container.Resolve<T>();
+            T pageModel = TinyIoC.Container.Resolve<T>();
             await PushPageModel(pageModel, parameters, modal, animate);
         }
 
-        public async Task PushViewModel<T, TPage>(object data, bool modal = false, bool animate = true) where T : BaseViewModel where TPage : Page
+        public async Task PushViewModel<T, TPage>(object data, bool modal = false, bool animate = true) where T : TinyViewModel where TPage : Page
         {
-            T viewModel = TinyIoC.TinyIoC.Container.Resolve<T>();
-            TPage page = TinyIoC.TinyIoC.Container.Resolve<TPage>();
+            T viewModel = TinyIoC.Container.Resolve<T>();
+            TPage page = TinyIoC.Container.Resolve<TPage>();
             ViewModelResolver.BindingPageModel(page, viewModel, data);
             await PushPageModelWithPage(page, viewModel, modal, animate);
         }
 
-        public async Task PushViewModel<T, TPage>(NavigationParameters parameters, bool modal = false, bool animate = true) where T : BaseViewModel where TPage : Page
+        public async Task PushViewModel<T, TPage>(NavigationParameters parameters, bool modal = false, bool animate = true) where T : TinyViewModel where TPage : Page
         {
-            var viewModel = TinyIoC.TinyIoC.Container.Resolve<T>() as BaseViewModel;
-            TPage page = TinyIoC.TinyIoC.Container.Resolve<TPage>();
+            var viewModel = TinyIoC.Container.Resolve<T>() as TinyViewModel;
+            TPage page = TinyIoC.Container.Resolve<TPage>();
             viewModel.Parameters = parameters;
             ViewModelResolver.BindingPageModel(page, viewModel, null);
             await PushPageModelWithPage(page, viewModel, modal, animate);
@@ -84,47 +84,47 @@ namespace TinyMVVM
 
         public Task PushViewModel(Type viewModelType, object data, bool modal = false, bool animate = true)
         {
-            var viewModel = TinyIoC.TinyIoC.Container.Resolve(viewModelType) as BaseViewModel;
+            var viewModel = TinyIoC.Container.Resolve(viewModelType) as TinyViewModel;
             return PushPageModel(viewModel, data, modal, animate);
         }
 
         public Task PushViewModel(Type viewModelType, NavigationParameters parameters, bool modal = false, bool animate = true)
         {
-            var viewModel = TinyIoC.TinyIoC.Container.Resolve(viewModelType) as BaseViewModel;
+            var viewModel = TinyIoC.Container.Resolve(viewModelType) as TinyViewModel;
             return PushPageModel(viewModel, parameters, modal, animate);
         }
 
         public Task PushViewModel(Type viewModelType, Type pageType, object data, bool modal = false, bool animate = true)
         {
-            var viewModel = TinyIoC.TinyIoC.Container.Resolve(viewModelType) as BaseViewModel;
-            var page = TinyIoC.TinyIoC.Container.Resolve(pageType) as Page;
+            var viewModel = TinyIoC.Container.Resolve(viewModelType) as TinyViewModel;
+            var page = TinyIoC.Container.Resolve(pageType) as Page;
             ViewModelResolver.BindingPageModel(page, viewModel, data);
             return PushPageModelWithPage(page, viewModel, modal, animate);
         }
 
         public Task PushViewModel(Type viewModelType, Type pageType, NavigationParameters parameters, bool modal = false, bool animate = true)
         {
-            var viewModel = TinyIoC.TinyIoC.Container.Resolve(viewModelType) as BaseViewModel;
-            var page = TinyIoC.TinyIoC.Container.Resolve(pageType) as Page;
+            var viewModel = TinyIoC.Container.Resolve(viewModelType) as TinyViewModel;
+            var page = TinyIoC.Container.Resolve(pageType) as Page;
             viewModel.Parameters = parameters;
             ViewModelResolver.BindingPageModel(page, viewModel, null);
             return PushPageModelWithPage(page, viewModel, modal, animate);
         }
 
-        private async Task PushPageModel(BaseViewModel viewModel, object data, bool modal = false, bool animate = true)
+        private async Task PushPageModel(TinyViewModel viewModel, object data, bool modal = false, bool animate = true)
         {
             var page = ViewModelResolver.ResolveViewModel(viewModel, data);
             await PushPageModelWithPage(page, viewModel, modal, animate);
         }
 
-        private async Task PushPageModel(BaseViewModel viewModel, NavigationParameters parameters, bool modal = false, bool animate = true)
+        private async Task PushPageModel(TinyViewModel viewModel, NavigationParameters parameters, bool modal = false, bool animate = true)
         {
             viewModel.Parameters = parameters;
             var page = ViewModelResolver.ResolveViewModel(viewModel, null);
             await PushPageModelWithPage(page, viewModel, modal, animate);
         }
 
-        private async Task PushPageModelWithPage(Page page, BaseViewModel viewodel, bool modal = false, bool animate = true)
+        private async Task PushPageModelWithPage(Page page, TinyViewModel viewodel, bool modal = false, bool animate = true)
         {
             viewodel.PreviousViewModel = currentViewModel; //This is the previous page model because it's push to a new one, and this is current
             viewodel.CurrentNavigationServiceName = currentViewModel.CurrentNavigationServiceName;
@@ -132,7 +132,7 @@ namespace TinyMVVM
             if (string.IsNullOrWhiteSpace(viewodel.PreviousNavigationServiceName))
                 viewodel.PreviousNavigationServiceName = currentViewModel.PreviousNavigationServiceName;
 
-            await TinyIoC.TinyIoC.Container.Resolve<INavigationService>(viewodel.CurrentNavigationServiceName).PushPage(page, modal, animate);
+            await TinyIoC.Container.Resolve<INavigationService>(viewodel.CurrentNavigationServiceName).PushPage(page, modal, animate);
         }
 
         public async Task PopViewModel(bool modal = false, bool animate = true)
@@ -146,13 +146,13 @@ namespace TinyMVVM
                 if (modal)
                     currentViewModel.RaisePageWasPopped();
 
-                await TinyIoC.TinyIoC.Container.Resolve<INavigationService>(currentViewModel.CurrentNavigationServiceName).PopPage(modal, animate);
+                await TinyIoC.Container.Resolve<INavigationService>(currentViewModel.CurrentNavigationServiceName).PopPage(modal, animate);
             }
         }
 
         public async Task PopToRoot(bool animate)
         {
-            await TinyIoC.TinyIoC.Container.Resolve<INavigationService>(currentViewModel.CurrentNavigationServiceName).PopToRoot(animate);
+            await TinyIoC.Container.Resolve<INavigationService>(currentViewModel.CurrentNavigationServiceName).PopToRoot(animate);
         }
 
         public void RemoveFromNavigation()
@@ -161,7 +161,7 @@ namespace TinyMVVM
             currentPage.Navigation.RemovePage(currentPage);
         }
 
-        public void RemoveFromNavigation<T>(bool removeAll = false) where T : BaseViewModel
+        public void RemoveFromNavigation<T>(bool removeAll = false) where T : TinyViewModel
         {
             //var pages = currentPage.Navigation.Where (o => o is T);
             foreach (var page in this.currentPage.Navigation.NavigationStack.Reverse().ToList())
@@ -176,7 +176,7 @@ namespace TinyMVVM
             }
         }
 
-        public async Task<string> PushViewModelWithNewNavigation<T>(object data, bool animate = true) where T : BaseViewModel
+        public async Task<string> PushViewModelWithNewNavigation<T>(object data, bool animate = true) where T : TinyViewModel
         {
             var page = ViewModelResolver.ResolveViewModel<T>();
             var navigationName = Guid.NewGuid().ToString();
@@ -185,7 +185,7 @@ namespace TinyMVVM
             return navigationName;
         }
 
-        public Task PushNewNavigationServiceModal(TabbedNavigationContainer tabbedNavigationContainer, BaseViewModel baseViewModel = null, bool animate = true)
+        public Task PushNewNavigationServiceModal(TabbedNavigationContainer tabbedNavigationContainer, TinyViewModel baseViewModel = null, bool animate = true)
         {
             var models = tabbedNavigationContainer.TabbedPages.Select(o => o.GetModel()).ToList();
             if (baseViewModel != null)
@@ -193,12 +193,12 @@ namespace TinyMVVM
             return PushNewNavigationServiceModal(tabbedNavigationContainer, models.ToArray(), animate);
         }
 
-        public Task PushNewNavigationServiceModal(INavigationService newNavigationService, BaseViewModel basePageModels, bool animate = true)
+        public Task PushNewNavigationServiceModal(INavigationService newNavigationService, TinyViewModel basePageModels, bool animate = true)
         {
-            return PushNewNavigationServiceModal(newNavigationService, new BaseViewModel[] { basePageModels }, animate);
+            return PushNewNavigationServiceModal(newNavigationService, new TinyViewModel[] { basePageModels }, animate);
         }
 
-        public async Task PushNewNavigationServiceModal(INavigationService newNavigationService, BaseViewModel[] basePageModels, bool animate = true)
+        public async Task PushNewNavigationServiceModal(INavigationService newNavigationService, TinyViewModel[] basePageModels, bool animate = true)
         {
             if (!(newNavigationService is Page navPage))
                 throw new Exception("Navigation service is not Page");
@@ -210,10 +210,10 @@ namespace TinyMVVM
                 pageModel.IsModalFirstChild = true;
             }
 
-            await TinyIoC.TinyIoC.Container.Resolve<INavigationService>(currentViewModel.CurrentNavigationServiceName).PushPage(navPage, true, animate);
+            await TinyIoC.Container.Resolve<INavigationService>(currentViewModel.CurrentNavigationServiceName).PushPage(navPage, true, animate);
         }
 
-        public Task PushNewNavigationServiceModal(MasterDetailNavigationContainer masterDetailContainer, BaseViewModel basePageModel = null, bool animate = true)
+        public Task PushNewNavigationServiceModal(MasterDetailNavigationContainer masterDetailContainer, TinyViewModel basePageModel = null, bool animate = true)
         {
             var models = masterDetailContainer.Pages.Select(o =>
             {
@@ -231,18 +231,18 @@ namespace TinyMVVM
 
         public async Task PopModalNavigationService(bool animate = true)
         {
-            var currentNavigationService = TinyIoC.TinyIoC.Container.Resolve<INavigationService>(currentViewModel.CurrentNavigationServiceName);
+            var currentNavigationService = TinyIoC.Container.Resolve<INavigationService>(currentViewModel.CurrentNavigationServiceName);
             currentNavigationService.NotifyChildrenPageWasPopped();
 
-            TinyIoC.TinyIoC.Container.Unregister<INavigationService>(currentViewModel.CurrentNavigationServiceName);
+            TinyIoC.Container.Unregister<INavigationService>(currentViewModel.CurrentNavigationServiceName);
 
             var navServiceName = currentViewModel.PreviousNavigationServiceName;
-            await TinyIoC.TinyIoC.Container.Resolve<INavigationService>(navServiceName).PopPage(animate);
+            await TinyIoC.Container.Resolve<INavigationService>(navServiceName).PopPage(animate);
         }
 
         public void SwitchOutRootNavigation(string navigationServiceName)
         {
-            INavigationService rootNavigation = TinyIoC.TinyIoC.Container.Resolve<INavigationService>(navigationServiceName);
+            INavigationService rootNavigation = TinyIoC.Container.Resolve<INavigationService>(navigationServiceName);
 
             if (!(rootNavigation is Page))
                 throw new Exception("Navigation service is not a page");
@@ -250,17 +250,17 @@ namespace TinyMVVM
             Application.Current.MainPage = rootNavigation as Page;
         }
 
-        public Task<BaseViewModel> SwitchSelectedRootPageModel<T>() where T : BaseViewModel
+        public Task<TinyViewModel> SwitchSelectedRootPageModel<T>() where T : TinyViewModel
         {
-            return TinyIoC.TinyIoC.Container.Resolve<INavigationService>(currentViewModel.CurrentNavigationServiceName).SwitchSelectedRootViewModel<T>();
+            return TinyIoC.Container.Resolve<INavigationService>(currentViewModel.CurrentNavigationServiceName).SwitchSelectedRootViewModel<T>();
         }
 
-        public Task<BaseViewModel> SwitchSelectedTab<T>() where T : BaseViewModel
+        public Task<TinyViewModel> SwitchSelectedTab<T>() where T : TinyViewModel
         {
             return SwitchSelectedRootPageModel<T>();
         }
 
-        public Task<BaseViewModel> SwitchSelectedMaster<T>() where T : BaseViewModel
+        public Task<TinyViewModel> SwitchSelectedMaster<T>() where T : TinyViewModel
         {
             return SwitchSelectedRootPageModel<T>();
         }

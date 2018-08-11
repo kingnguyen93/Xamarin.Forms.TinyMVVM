@@ -7,7 +7,7 @@ using Xamarin.Forms;
 
 namespace TinyMVVM
 {
-    public class BaseViewModel : INotifyPropertyChanged
+    public class TinyViewModel : INotifyPropertyChanged
     {
         private NavigationPage _navigationPage;
 
@@ -18,14 +18,14 @@ namespace TinyMVVM
         public event EventHandler PageWasPopped;
 
         /// <summary>
-        /// This property is used by the FreshBaseContentPage and allows you to set the toolbar items on the page.
+        /// This property is used by the TinyContentPage and allows you to set the toolbar items on the page.
         /// </summary>
         public ObservableCollection<ToolbarItem> ToolbarItems { get; set; }
 
         /// <summary>
-        /// The previous page model, that's automatically filled, on push
+        /// The previous view model, that's automatically filled, on push
         /// </summary>
-        public BaseViewModel PreviousViewModel { get; set; }
+        public TinyViewModel PreviousViewModel { get; set; }
 
         /// <summary>
         /// A reference to the current page, that's automatically filled, on push
@@ -58,7 +58,7 @@ namespace TinyMVVM
         public string PreviousNavigationServiceName;
 
         /// <summary>
-        /// This means the current PageModel is shown modally and can be pop'd modally
+        /// This means the current ViewModel is shown modally and can be pop'd modally
         /// </summary>
         public bool IsModalAndHasPreviousNavigationStack()
         {
@@ -67,6 +67,9 @@ namespace TinyMVVM
 
         private bool isBusy = false;
 
+        /// <summary>
+        /// This means the current page is busy
+        /// </summary>
         public bool IsBusy
         {
             get { return isBusy; }
@@ -75,6 +78,9 @@ namespace TinyMVVM
 
         private string title = string.Empty;
 
+        /// <summary>
+        /// Page title
+        /// </summary>
         public string Title
         {
             get { return title; }
@@ -92,12 +98,12 @@ namespace TinyMVVM
             return true;
         }
 
-        public BaseViewModel()
+        public TinyViewModel()
         {
         }
 
         /// <summary>
-        /// This method is called when the PageModel is loaded, the initData is the data that's sent from pagemodel before
+        /// This method is called when the ViewModel is loaded, the initData is the data that's sent from pagemodel before
         /// </summary>
         /// <param name="data">Data that's sent to this PageModel from the pusher</param>
         public virtual void Init(object data)
@@ -113,7 +119,7 @@ namespace TinyMVVM
         }
 
         /// <summary>
-        /// This method is called when the PageModel is created.
+        /// This method is called when a page is Push'd.
         /// </summary>
         public virtual void OnCreated()
         {

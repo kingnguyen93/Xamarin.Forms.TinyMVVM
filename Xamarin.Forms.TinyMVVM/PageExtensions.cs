@@ -4,9 +4,9 @@ namespace TinyMVVM
 {
     public static class PageExtensions
     {
-        public static BaseViewModel GetModel(this Page page)
+        public static TinyViewModel GetModel(this Page page)
         {
-            return page.BindingContext as BaseViewModel;
+            return page.BindingContext as TinyViewModel;
         }
 
         public static void NotifyAllChildrenPopped(this NavigationPage navigationPage)

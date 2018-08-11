@@ -1,6 +1,7 @@
 ﻿using System;
+using TinyIoC;
 
-namespace TinyIoC
+namespace TinyMVVM
 {
     /// <summary>
     /// Built in TinyIOC for ease of use

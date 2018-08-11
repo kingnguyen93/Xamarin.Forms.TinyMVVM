@@ -3,9 +3,9 @@ using Xamarin.Forms;
 
 namespace TinyMVVM
 {
-    public class BaseContentBase : ContentPage
+    public class TinyContentBase : ContentPage
     {
-        public BaseContentBase()
+        public TinyContentBase()
         {
         }
 
@@ -13,7 +13,7 @@ namespace TinyMVVM
         {
             base.OnBindingContextChanged();
 
-            if (BindingContext is BaseViewModel viewModel && viewModel.ToolbarItems != null && viewModel.ToolbarItems.Count > 0)
+            if (BindingContext is TinyViewModel viewModel && viewModel.ToolbarItems != null && viewModel.ToolbarItems.Count > 0)
             {
                 viewModel.ToolbarItems.CollectionChanged += ViewModel_ToolbarItems_CollectionChanged;
 

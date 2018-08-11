@@ -25,7 +25,7 @@ namespace TinyMVVM
 
         protected void RegisterNavigation()
         {
-            TinyIoC.TinyIoC.Container.Register<INavigationService>(this, NavigationServiceName);
+            TinyIoC.Container.Register<INavigationService>(this, NavigationServiceName);
         }
 
         internal Page CreateContainerPageSafe(Page page)
@@ -41,7 +41,7 @@ namespace TinyMVVM
             return new NavigationPage(page);
         }
 
-        public Task PushPage(Page page, BaseViewModel model, bool modal = false, bool animate = true)
+        public Task PushPage(Page page, TinyViewModel model, bool modal = false, bool animate = true)
         {
             if (modal)
                 return Navigation.PushModalAsync(CreateContainerPageSafe(page), animate);
@@ -67,7 +67,7 @@ namespace TinyMVVM
             return Navigation.PopToRootAsync(animate);
         }
 
-        public Task<BaseViewModel> SwitchSelectedRootViewModel<T>() where T : BaseViewModel
+        public Task<TinyViewModel> SwitchSelectedRootViewModel<T>() where T : TinyViewModel
         {
             throw new Exception("This navigation container has no selected roots, just a single root");
         }

@@ -9,7 +9,7 @@ namespace TinyMVVM
 
         Task PushPage(Page page, bool modal = false, bool animate = true);
 
-        Task PushPage(Page page, BaseViewModel model, bool modal = false, bool animate = true);
+        Task PushPage(Page page, TinyViewModel model, bool modal = false, bool animate = true);
 
         Task PopPage(bool modal = false, bool animate = true);
 
@@ -20,7 +20,7 @@ namespace TinyMVVM
         /// </summary>
         /// <returns>The BagePageModel, allows you to PopToRoot, Pass Data</returns>
         /// <param name="newSelected">The pagemodel of the root you want to change</param>
-        Task<BaseViewModel> SwitchSelectedRootViewModel<T>() where T : BaseViewModel;
+        Task<TinyViewModel> SwitchSelectedRootViewModel<T>() where T : TinyViewModel;
 
         void NotifyChildrenPageWasPopped();
     }

@@ -1,4 +1,4 @@
-﻿namespace TinyIoC
+﻿namespace TinyMVVM
 {
     public class TinyIoC
     {

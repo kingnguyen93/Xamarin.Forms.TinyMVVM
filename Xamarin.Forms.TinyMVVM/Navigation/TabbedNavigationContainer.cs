@@ -22,10 +22,10 @@ namespace TinyMVVM
 
         protected void RegisterNavigation()
         {
-            TinyIoC.TinyIoC.Container.Register<INavigationService>(this, NavigationServiceName);
+            TinyIoC.Container.Register<INavigationService>(this, NavigationServiceName);
         }
 
-        public virtual Page AddTab<T>(string title, string icon, object data = null) where T : BaseViewModel
+        public virtual Page AddTab<T>(string title, string icon, object data = null) where T : TinyViewModel
         {
             var page = ViewModelResolver.ResolveViewModel<T>(data);
             page.GetModel().CurrentNavigationServiceName = NavigationServiceName;
@@ -51,7 +51,7 @@ namespace TinyMVVM
             return new NavigationPage(page);
         }
 
-        public Task PushPage(Page page, BaseViewModel model, bool modal = false, bool animate = true)
+        public Task PushPage(Page page, TinyViewModel model, bool modal = false, bool animate = true)
         {
             if (modal)
                 return CurrentPage.Navigation.PushModalAsync(CreateContainerPageSafe(page));
@@ -88,7 +88,7 @@ namespace TinyMVVM
             }
         }
 
-        public Task<BaseViewModel> SwitchSelectedRootViewModel<T>() where T : BaseViewModel
+        public Task<TinyViewModel> SwitchSelectedRootViewModel<T>() where T : TinyViewModel
         {
             var page = _tabs.FindIndex(o => o.GetModel().GetType().FullName == typeof(T).FullName);
 

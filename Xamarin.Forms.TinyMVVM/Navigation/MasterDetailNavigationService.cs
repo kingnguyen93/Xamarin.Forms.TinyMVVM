@@ -36,7 +36,7 @@ namespace TinyMVVM
 
         protected virtual void RegisterNavigation()
         {
-            TinyIoC.TinyIoC.Container.Register<INavigationService>(this, NavigationServiceName);
+            TinyIoC.Container.Register<INavigationService>(this, NavigationServiceName);
         }
 
         protected virtual void CreateMenuPage(string menuPageTitle, string menuIcon = null)
@@ -67,7 +67,7 @@ namespace TinyMVVM
             Master = navPage;
         }
 
-        public virtual void AddPage<T>(string title, object data = null) where T : BaseViewModel
+        public virtual void AddPage<T>(string title, object data = null) where T : TinyViewModel
         {
             var page = ViewModelResolver.ResolveViewModel<T>(data);
             page.GetModel().CurrentNavigationServiceName = NavigationServiceName;
@@ -112,7 +112,7 @@ namespace TinyMVVM
             return new NavigationPage(root);
         }
 
-        public Task PushPage(Page page, BaseViewModel model, bool modal = false, bool animate = true)
+        public Task PushPage(Page page, TinyViewModel model, bool modal = false, bool animate = true)
         {
             if (modal)
                 return Navigation.PushModalAsync(CreateContainerPageSafe(page));
@@ -162,7 +162,7 @@ namespace TinyMVVM
                 ((INavigationService)Detail).NotifyChildrenPageWasPopped();
         }
 
-        public Task<BaseViewModel> SwitchSelectedRootViewModel<T>() where T : BaseViewModel
+        public Task<TinyViewModel> SwitchSelectedRootViewModel<T>() where T : TinyViewModel
         {
             var tabIndex = pagesInner.FindIndex(o => o.GetModel().GetType().FullName == typeof(T).FullName);
 
