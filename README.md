@@ -8,40 +8,41 @@ TinyMVVM is a super light MVVM Framework designed specifically for Xamarin.Forms
 - Uses a Convention over Configuration
 
 #### Features
-- PageModel to PageModel Navigation
+- ViewModel to ViewModel Navigation
 - Automatic wiring of BindingContext
 - Automatic wiring of Page events (eg. appearing)
-- Basic methods (with values) on PageModel (init, reverseinit)
-- Built in IOC Container
-- PageModel Constructor Injection
+- Basic methods (with values) on ViewModel (init, reverseinit, oncreated, ondisposed)
+- Built-in IoC Container
+- ViewModel Constructor Injection
 - Basic methods available in Model, like Alert
-- Built in Navigation types for SimpleNavigation, Tabbed and MasterDetail
+- Built-in Navigation types for SimpleNavigation, Tabbed and MasterDetail
 
 #### Conventions
 This Framework, while simple, is also powerful and uses a Convention over Configuration style.
 
-- A Page must have a corresponding PageModel, with naming important so a QuotePageModel must have a QuotePage The BindingContext on the page will be automatically set with the Model
-- A PageModel can have a Init method that takes a object
-- A PageModel can have a ReverseInit method that also take a object and is called when a model is poped with a object
-- PageModel can have dependancies automatically injected into the Constructor
+- A Page must have a corresponding ViewModel, with naming important so a QuoteViewModel must have a QuotePage. The BindingContext on the page will be automatically set with the Model
+- A ViewModel can have a Init method that takes a object
+- A ViewModel can have a ReverseInit method that also take a object and is called when a model is poped with a object
+- A ViewModel can get multi object from NavigationParameters
+- ViewModel can have dependancies automatically injected into the Constructor
 
 #### Navigation
-The Primary form of Navigation in FreshMvvm is PageModel to PageModel, this essentially means our views have no idea of Navigation.
+The Primary form of Navigation in TinyMVVM is ViewModel to ViewModel, this essentially means our views have no idea of Navigation.
 
-So to Navigate between PageModels use:
+So to Navigate between ViewModel use:
 
 ```csharp
-    await CoreMethods.PushPageModel<QuotePageModel>(); // Pushes navigation stack
-    await CoreMethods.PushPageModel<QuotePageModel>(null, true); // Pushes a Modal
+    await CoreMethods.PushViewModel<QuoteViewModel>(); // Pushes navigation stack
+    await CoreMethods.PushViewModel<QuoteViewModel>(null, true); // Pushes a Modal
 ```
 
-The engine for Navigation in FreshMvvm is done via a simple interface, with methods for Push and Pop. Essentially these methods can control the Navigation of the application in any way they like.
+The engine for Navigation in TinyMVVM is done via a simple interface, with methods for Push and Pop. Essentially these methods can control the Navigation of the application in any way they like.
 
 ```csharp
-    public interface IFreshNavigationService
+    public interface INavigationService
     {
-    	Task PushPage(Page page, FreshBasePageModel model, bool modal = false);
-    	Task PopPage(bool modal = false);
+    	Task PushViewModel(Page page, TinyViewModel model, bool modal = false);
+    	Task PushViewModel(bool modal = false);
     }
 ```
 
@@ -52,32 +53,32 @@ The Framework contains some built in Navigation containers for the different typ
 ###### Basic Navigation - Built In
 
 ```csharp
-    var page = FreshPageModelResolver.ResolvePageModel<MainMenuPageModel> ();
-    var basicNavContainer = new FreshNavigationContainer (page);
+    var page = ViewModelResolver.ResolveViewModel<MainMenuViewModel>();
+    var basicNavContainer = new NavigationContainer(page);
     MainPage = basicNavContainer;
 ```
 
 ###### Master Detail - Built In
 
 ```csharp
-    var masterDetailNav = new FreshMasterDetailNavigationContainer ();
-    masterDetailNav.Init ("Menu");
-    masterDetailNav.AddPage<ContactListPageModel> ("Contacts", null);
-    masterDetailNav.AddPage<QuoteListPageModel> ("Pages", null);
+    var masterDetailNav = new MasterDetailNavigationContainer();
+    masterDetailNav.Init("Menu");
+    masterDetailNav.AddPage<ContactListViewModel>("Contacts", null);
+    masterDetailNav.AddPage<QuoteListViewModel>("Pages", null);
     MainPage = masterDetailNav;
 ```
 
 ###### Tabbed Navigation - Built In
 
 ```csharp
-    var tabbedNavigation = new FreshTabbedNavigationContainer ();
-    tabbedNavigation.AddTab<ContactListPageModel> ("Contacts", null);
-    tabbedNavigation.AddTab<QuoteListPageModel> ("Pages", null);
+    var tabbedNavigation = new TabbedNavigationContainer();
+    tabbedNavigation.AddTab<ContactListViewModel>("Contacts", null);
+    tabbedNavigation.AddTab<QuoteListViewModel>("Pages", null);
     MainPage = tabbedNavigation;
 ```
 
 ###### Implementing Custom Navigation
-It's possible to setup any type of Navigation by implementing IFreshNavigationService.There's a sample of this in Sample Application named CustomImplementedNav.cs.
+It's possible to setup any type of Navigation by implementing INavigationService.There's a sample of this in Sample Application named CustomImplementedNav.cs.
 
 #### Sample Apps
 - Basic Navigation Sample
@@ -86,40 +87,40 @@ It's possible to setup any type of Navigation by implementing IFreshNavigationSe
 - Tabbed Navigation with MasterDetail Popover Sample (This is called the CustomImplementedNav in the Sample App)
 
 #### Inversion of Control (IOC)
-So that you don't need to include your own IOC container, FreshMvvm comes with a IOC container built in. It's using TinyIOC underneith, but with different naming to avoid conflicts.
+So that you don't need to include your own IoC container, TinyMVVM comes with a IoC Container built-in. It's using TinyIoC underneith.
 
 ##### To Register services in the container use Register:
 
 ```csharp
-    FreshIOC.Container.Register<IDatabaseService, DatabaseService>();
+    TinyIoC.Container.Register<IDatabaseService, DatabaseService>();
 ```
 
 ##### To obtain a service use Resolve:
 
 ```csharp
-    FreshIOC.Container.Resolve<IDatabaseService>();
+    TinyIoC.Container.Resolve<IDatabaseService>();
 ```
 
 *This is also what drives constructor injection.
 
 #### IOC Container Lifetime Registration Options
-We now support a fluent API for setting the object lifetime of object inside the IOC Container.
+We now support a fluent API for setting the object lifetime of object inside the IoC Container.
 
 ```csharp
     // By default we register concrete types as 
     // multi-instance, and interfaces as singletons
-    FreshIOC.Container.Register<MyConcreteType>(); // Multi-instance
-    FreshIOC.Container.Register<IMyInterface, MyConcreteType>(); // Singleton 
+    TinyIoC.Container.Register<MyConcreteType>(); // Multi-instance
+    TinyIoC.Container.Register<IMyInterface, MyConcreteType>(); // Singleton 
     
     // Fluent API allows us to change that behaviour
-    FreshIOC.Container.Register<MyConcreteType>().AsSingleton(); // Singleton
-    FreshIOC.Container.Register<IMyInterface, MyConcreteType>().AsMultiInstance(); // Multi-instance
+    TinyIoC.Container.Register<MyConcreteType>().AsSingleton(); // Singleton
+    TinyIoC.Container.Register<IMyInterface, MyConcreteType>().AsMultiInstance(); // Multi-instance
 ```
 
-As you can see below the IFreshIOC interface methods return the IRegisterOptions interface.
+As you can see below the ITinyIoC interface methods return the IRegisterOptions interface.
 
 ```csharp
-    public interface IFreshIOC
+    public interface ITinyIoC
     {
         object Resolve(Type resolveType);
         IRegisterOptions Register<RegisterType>(RegisterType instance) where RegisterType : class;
@@ -143,20 +144,20 @@ The interface that's returned from the register methods is IRegisterOptions.
     }
 ```
 
-#### PageModel - Constructor Injection
+#### ViewModel - Constructor Injection
 When PageModels are pushed services that are in the IOC container can be pushed into the Constructor.
 
 ```csharp
-    FreshIOC.Container.Register<IDatabaseService, DatabaseService>();
+    TinyIoC.Container.Register<IDatabaseService, DatabaseService>();
 ```
 
-#### PageModel Important Methods
+#### ViewModel Important Methods
 
 ```csharp
         /// <summary>
         /// The previous page model, that's automatically filled, on push
         /// </summary>
-        public FreshBasePageModel PreviousPageModel { get; set; }
+        public FreshBasePageModel PreviousViewModel { get; set; }
     
         /// <summary>
         /// A reference to the current page, that's automatically filled, on push
@@ -214,44 +215,52 @@ When PageModels are pushed services that are in the IOC container can be pushed 
 ```
 
 #### The CoreMethods
-Each PageModel has a property called 'CoreMethods' which is automatically filled when a PageModel is pushed, it's the basic functions that most apps need like Alerts, Pushing, Poping etc.
+Each PageModel has a property called 'CoreMethods' which is automatically filled when a ViewModel is pushed, it's the basic functions that most apps need like Alerts, Pushing, Poping etc.
 
 ```csharp
-    public interface IPageModelCoreMethods
+    public interface IViewModelCoreMethods
     {
     	Task DisplayAlert (string title, string message, string cancel);
     	Task<string> DisplayActionSheet (string title, string cancel, string destruction, params string[] buttons);
     	Task<bool> DisplayAlert (string title, string message, string accept, string cancel);
-    	Task PushPageModel<T>(object data, bool modal = false) where T : FreshBasePageModel;
-    	Task PopPageModel(bool modal = false);
-    	Task PopPageModel(object data, bool modal = false);
-    	Task PushPageModel<T>() where T : FreshBasePageModel;
+        Task PushPage<T>(bool modal = false, bool animate = true) where T : Page;
+        Task PushPage(Type pageType, bool modal = false, bool animate = true);
+        Task PushPage(Page page, bool modal = false, bool animate = true);
+        Task PushViewModel<T>(object data = null, bool modal = false, bool animate = true) where T : TinyViewModel;
+        Task PushViewModel<T>(NavigationParameters parameters, bool modal = false, bool animate = true) where T : TinyViewModel;
+        Task PushViewModel<T, TPage>(object data = null, bool modal = false, bool animate = true) where T : TinyViewModel where TPage : Page;
+        Task PushViewModel<T, TPage>(NavigationParameters parameters, bool modal = false, bool animate = true) where T : TinyViewModel where TPage : Page;
+        Task PushViewModel(Type viewModelType, object data = null, bool modal = false, bool animate = true);
+        Task PushViewModel(Type viewModelType, NavigationParameters parameters, bool modal = false, bool animate = true);
+        Task PushViewModel(Type viewModelType, Type pageType, object data = null, bool modal = false, bool animate = true);
+        Task PushViewModel(Type viewModelType, Type pageType, NavigationParameters parameters, bool modal = false, bool animate = true);
+        Task PopViewModel(bool modal = false, bool animate = true);
     }
 ```
 
 #### Multiple Navigation Services
-It’s always been possible to do any type of navigation in FreshMvvm, with custom or advanced scenarios were done by implementing a custom navigation service. Even with this ability people found it a little hard to do advanced navigation scenarios in FreshMvvm. After I reviewed all the support questions that came in for FreshMvvm I found that the basic issue people had was they wanted to be able to use our built in navigation containers multiple times, two primary examples are 1) within a master detail having a navigation stack in a master and another in the detail 2) The ability to push modally with a new navigation container. In order to support both these scenarios I concluded that the FreshMvvm required the ability to have named NavigationServices so that we could support multiple NavigationService’s.
+It’s always been possible to do any type of navigation in TinyMVVM, with custom or advanced scenarios were done by implementing a custom navigation service. Even with this ability people found it a little hard to do advanced navigation scenarios in TinyMVVM. After I reviewed all the support questions that came in for TinyMVVM I found that the basic issue people had was they wanted to be able to use our built in navigation containers multiple times, two primary examples are 1) within a master detail having a navigation stack in a master and another in the detail 2) The ability to push modally with a new navigation container. In order to support both these scenarios I concluded that the TinyMVVM required the ability to have named NavigationServices so that we could support multiple NavigationService’s.
 
 #### Using multiple navigation containers
 Below we’re running two navigation stacks, in a single MasterDetail.
 
 ```csharp
-    var masterDetailsMultiple = new MasterDetailPage (); //generic master detail page
+    var masterDetailsMultiple = new MasterDetailPage(); //generic master detail page
     
     //we setup the first navigation container with ContactList
-    var contactListPage = FreshPageModelResolver.ResolvePageModel<ContactListPageModel> ();
+    var contactListPage = ViewModelResolver.ResolveViewModel<ContactListPageModel>();
     contactListPage.Title = "Contact List";
     //we setup the first navigation container with name MasterPageArea
-    var masterPageArea = new FreshNavigationContainer (contactListPage, "MasterPageArea");
+    var masterPageArea = new NavigationContainer(contactListPage, "MasterPageArea");
     masterPageArea.Title = "Menu";
     
     masterDetailsMultiple.Master = masterPageArea; //set the first navigation container to the Master
     
     //we setup the second navigation container with the QuoteList 
-    var quoteListPage = FreshPageModelResolver.ResolvePageModel<QuoteListPageModel> ();
+    var quoteListPage = ViewModelResolver.ResolveViewModel<QuoteListPageModel>();
     quoteListPage.Title = "Quote List";
     //we setup the second navigation container with name DetailPageArea
-    var detailPageArea = new FreshNavigationContainer (quoteListPage, "DetailPageArea");
+    var detailPageArea = new FreshNavigationContainer(quoteListPage, "DetailPageArea");
     
     masterDetailsMultiple.Detail = detailPageArea; //set the second navigation container to the Detail
     
@@ -262,21 +271,21 @@ Below we’re running two navigation stacks, in a single MasterDetail.
 
 ```csharp
     //push a basic page Modally
-    var page = FreshPageModelResolver.ResolvePageModel<MainMenuPageModel> ();
-    var basicNavContainer = new FreshNavigationContainer (page, "secondNavPage");
-    await CoreMethods.PushNewNavigationServiceModal(basicNavContainer, new FreshBasePageModel[] { page.GetModel() }); 
+    var page = ViewModelResolver.ResolveViewModel<MainMenuViewModel>();
+    var basicNavContainer = new NavigationContainer(page, "secondNavPage");
+    await CoreMethods.PushNewNavigationServiceModal(basicNavContainer, new TinyViewModel[] { page.GetModel() }); 
     
     //push a tabbed page Modally
-    var tabbedNavigation = new FreshTabbedNavigationContainer ("secondNavPage");
-    tabbedNavigation.AddTab<ContactListPageModel> ("Contacts", "contacts.png", null);
-    tabbedNavigation.AddTab<QuoteListPageModel> ("Quotes", "document.png", null);
+    var tabbedNavigation = new TabbedNavigationContainer ("secondNavPage");
+    tabbedNavigation.AddTab<ContactListViewModel>("Contacts", "contacts.png", null);
+    tabbedNavigation.AddTab<QuoteListViewModel> ("Quotes", "document.png", null);
     await CoreMethods.PushNewNavigationServiceModal(tabbedNavigation);
     
     //push a master detail page Modally
-    var masterDetailNav = new FreshMasterDetailNavigationContainer ("secondNavPage");
-    masterDetailNav.Init ("Menu", "Menu.png");
-    masterDetailNav.AddPage<ContactListPageModel> ("Contacts", null);
-    masterDetailNav.AddPage<QuoteListPageModel> ("Quotes", null);
+    var masterDetailNav = new MasterDetailNavigationContainer("secondNavPage");
+    masterDetailNav.Init("Menu", "Menu.png");
+    masterDetailNav.AddPage<ContactListViewModel>("Contacts", null);
+    masterDetailNav.AddPage<QuoteListViewModel>("Quotes", null);
     await CoreMethods.PushNewNavigationServiceModal(masterDetailNav);
 ```
 
@@ -296,23 +305,26 @@ To begin with we can setup some names for our navigation containers.
 Then we can create our two navigation containers and assign to the MainPage.
 
 ```csharp
-    var loginPage = FreshMvvm.FreshPageModelResolver.ResolvePageModel<LoginViewModel>();
-    var loginContainer = new FreshNavigationContainer(loginPage, NavigationContainerNames.AuthenticationContainer);
+    var loginPage = ViewModelResolver.ResolveViewModel<LoginViewModel>();
+    var loginContainer = new NavigationContainer(loginPage, NavigationContainerNames.AuthenticationContainer);
     
-    var myPitchListViewContainer = new FreshTabbedNavigationContainer(NavigationContainerNames.MainContainer);
+    var myPitchListViewContainer = new TabbedNavigationContainer(NavigationContainerNames.MainContainer);
     
     MainPage = loginContainer;
-    The Navigation Container will use the name passed as argument to register in this method
-    
-    public FreshTabbedNavigationContainer(string navigationServiceName)
+```
+
+The Navigation Container will use the name passed as argument to register in this method
+
+```csharp
+    public TabbedNavigationContainer(string navigationServiceName)
     {
         NavigationServiceName = navigationServiceName;
-        RegisterNavigation ();
+        RegisterNavigation();
     }
     
-    protected void RegisterNavigation ()
+    protected void RegisterNavigation()
     {
-        FreshIOC.Container.Register<IFreshNavigationService> (this, NavigationServiceName);
+        TinyIoC.Container.Register<INavigationService>(this, NavigationServiceName);
     }
 ```
 
@@ -324,19 +336,19 @@ Once we've set this up we can now switch out our navigation containers.
 That name will be resolved in this method to find the correct Navigation Container
 
 ```csharp
-    public void SwitchOutRootNavigation (string navigationServiceName)
+    public void SwitchOutRootNavigation(string navigationServiceName)
     {
-        IFreshNavigationService rootNavigation = FreshIOC.Container.Resolve<IFreshNavigationService> (navigationServiceName);
+        INavigationService rootNavigation = TinyIoC.Container.Resolve<INavigationService>(navigationServiceName);
     }
 ```
 
 #### Custom IOC Containers
-The second major request for FreshMvvm 1.0 was to allow custom IOC containers. In the case that your application already has a container that you want to leverage.
+The second major request for TinyMVVM was to allow custom IoC containers. In the case that your application already has a container that you want to leverage.
 
-Using a custom IOC container is very simple in that you only need to implement a single interface.
+Using a custom IoC container is very simple in that you only need to implement a single interface.
 
 ```csharp
-    public interface IFreshIOC
+    public interface ITinyIoC
     {
         object Resolve(Type resolveType);
         void Register<RegisterType>(RegisterType instance) where RegisterType : class;
@@ -349,10 +361,10 @@ Using a custom IOC container is very simple in that you only need to implement a
     }
 ```
 
-And then set the IOC container in the System.
+And then set the IoC container in the System.
 
 ```csharp
-    FreshIOC.OverrideContainer(myContainer);
+    TinyIoC.OverrideContainer(myContainer);
 ```
 #### Other Features
 ##### WhenAny
@@ -362,7 +374,7 @@ In the example below, we use any to link up
 
 ```csharp
     [PropertyChanged.AddINotifyPropertyChangedInterface]
-    public class ContactPageModel : FreshBasePageModel
+    public class ContactPageModel : TinyViewModel
     {
         public ContactPageModel()
         {
