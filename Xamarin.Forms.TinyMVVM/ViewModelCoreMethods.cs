@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Xamarin.Forms.IoC;
+using Xamarin.Forms;
 
-namespace Xamarin.Forms
+namespace TinyMVVM
 {
     public class ViewModelCoreMethods : IViewModelCoreMethods
     {
@@ -38,45 +38,45 @@ namespace Xamarin.Forms
 
         public async Task PushPage<TPage>(bool modal = false, bool animate = true) where TPage : Page
         {
-            TPage page = FormsIoC.Container.Resolve<TPage>();
+            TPage page = TinyIoC.TinyIoC.Container.Resolve<TPage>();
             await PushPage(page);
         }
 
         public async Task PushPage(Type pageType, bool modal = false, bool animate = true)
         {
-            var page = FormsIoC.Container.Resolve(pageType) as Page;
+            var page = TinyIoC.TinyIoC.Container.Resolve(pageType) as Page;
             await PushPage(page);
         }
 
         public async Task PushPage(Page page, bool modal = false, bool animate = true)
         {
-            await FormsIoC.Container.Resolve<INavigationService>(currentViewModel.CurrentNavigationServiceName).PushPage(page, modal, animate);
+            await TinyIoC.TinyIoC.Container.Resolve<INavigationService>(currentViewModel.CurrentNavigationServiceName).PushPage(page, modal, animate);
         }
 
         public async Task PushViewModel<T>(object data, bool modal = false, bool animate = true) where T : BaseViewModel
         {
-            T pageModel = FormsIoC.Container.Resolve<T>();
+            T pageModel = TinyIoC.TinyIoC.Container.Resolve<T>();
             await PushPageModel(pageModel, data, modal, animate);
         }
 
         public async Task PushViewModel<T>(NavigationParameters parameters, bool modal = false, bool animate = true) where T : BaseViewModel
         {
-            T pageModel = FormsIoC.Container.Resolve<T>();
+            T pageModel = TinyIoC.TinyIoC.Container.Resolve<T>();
             await PushPageModel(pageModel, parameters, modal, animate);
         }
 
         public async Task PushViewModel<T, TPage>(object data, bool modal = false, bool animate = true) where T : BaseViewModel where TPage : Page
         {
-            T viewModel = FormsIoC.Container.Resolve<T>();
-            TPage page = FormsIoC.Container.Resolve<TPage>();
+            T viewModel = TinyIoC.TinyIoC.Container.Resolve<T>();
+            TPage page = TinyIoC.TinyIoC.Container.Resolve<TPage>();
             ViewModelResolver.BindingPageModel(page, viewModel, data);
             await PushPageModelWithPage(page, viewModel, modal, animate);
         }
 
         public async Task PushViewModel<T, TPage>(NavigationParameters parameters, bool modal = false, bool animate = true) where T : BaseViewModel where TPage : Page
         {
-            var viewModel = FormsIoC.Container.Resolve<T>() as BaseViewModel;
-            TPage page = FormsIoC.Container.Resolve<TPage>();
+            var viewModel = TinyIoC.TinyIoC.Container.Resolve<T>() as BaseViewModel;
+            TPage page = TinyIoC.TinyIoC.Container.Resolve<TPage>();
             viewModel.Parameters = parameters;
             ViewModelResolver.BindingPageModel(page, viewModel, null);
             await PushPageModelWithPage(page, viewModel, modal, animate);
@@ -84,28 +84,28 @@ namespace Xamarin.Forms
 
         public Task PushViewModel(Type viewModelType, object data, bool modal = false, bool animate = true)
         {
-            var viewModel = FormsIoC.Container.Resolve(viewModelType) as BaseViewModel;
+            var viewModel = TinyIoC.TinyIoC.Container.Resolve(viewModelType) as BaseViewModel;
             return PushPageModel(viewModel, data, modal, animate);
         }
 
         public Task PushViewModel(Type viewModelType, NavigationParameters parameters, bool modal = false, bool animate = true)
         {
-            var viewModel = FormsIoC.Container.Resolve(viewModelType) as BaseViewModel;
+            var viewModel = TinyIoC.TinyIoC.Container.Resolve(viewModelType) as BaseViewModel;
             return PushPageModel(viewModel, parameters, modal, animate);
         }
 
         public Task PushViewModel(Type viewModelType, Type pageType, object data, bool modal = false, bool animate = true)
         {
-            var viewModel = FormsIoC.Container.Resolve(viewModelType) as BaseViewModel;
-            var page = FormsIoC.Container.Resolve(pageType) as Page;
+            var viewModel = TinyIoC.TinyIoC.Container.Resolve(viewModelType) as BaseViewModel;
+            var page = TinyIoC.TinyIoC.Container.Resolve(pageType) as Page;
             ViewModelResolver.BindingPageModel(page, viewModel, data);
             return PushPageModelWithPage(page, viewModel, modal, animate);
         }
 
         public Task PushViewModel(Type viewModelType, Type pageType, NavigationParameters parameters, bool modal = false, bool animate = true)
         {
-            var viewModel = FormsIoC.Container.Resolve(viewModelType) as BaseViewModel;
-            var page = FormsIoC.Container.Resolve(pageType) as Page;
+            var viewModel = TinyIoC.TinyIoC.Container.Resolve(viewModelType) as BaseViewModel;
+            var page = TinyIoC.TinyIoC.Container.Resolve(pageType) as Page;
             viewModel.Parameters = parameters;
             ViewModelResolver.BindingPageModel(page, viewModel, null);
             return PushPageModelWithPage(page, viewModel, modal, animate);
@@ -132,7 +132,7 @@ namespace Xamarin.Forms
             if (string.IsNullOrWhiteSpace(viewodel.PreviousNavigationServiceName))
                 viewodel.PreviousNavigationServiceName = currentViewModel.PreviousNavigationServiceName;
 
-            await FormsIoC.Container.Resolve<INavigationService>(viewodel.CurrentNavigationServiceName).PushPage(page, modal, animate);
+            await TinyIoC.TinyIoC.Container.Resolve<INavigationService>(viewodel.CurrentNavigationServiceName).PushPage(page, modal, animate);
         }
 
         public async Task PopViewModel(bool modal = false, bool animate = true)
@@ -146,13 +146,13 @@ namespace Xamarin.Forms
                 if (modal)
                     currentViewModel.RaisePageWasPopped();
 
-                await FormsIoC.Container.Resolve<INavigationService>(currentViewModel.CurrentNavigationServiceName).PopPage(modal, animate);
+                await TinyIoC.TinyIoC.Container.Resolve<INavigationService>(currentViewModel.CurrentNavigationServiceName).PopPage(modal, animate);
             }
         }
 
         public async Task PopToRoot(bool animate)
         {
-            await FormsIoC.Container.Resolve<INavigationService>(currentViewModel.CurrentNavigationServiceName).PopToRoot(animate);
+            await TinyIoC.TinyIoC.Container.Resolve<INavigationService>(currentViewModel.CurrentNavigationServiceName).PopToRoot(animate);
         }
 
         public void RemoveFromNavigation()
@@ -210,7 +210,7 @@ namespace Xamarin.Forms
                 pageModel.IsModalFirstChild = true;
             }
 
-            await FormsIoC.Container.Resolve<INavigationService>(currentViewModel.CurrentNavigationServiceName).PushPage(navPage, true, animate);
+            await TinyIoC.TinyIoC.Container.Resolve<INavigationService>(currentViewModel.CurrentNavigationServiceName).PushPage(navPage, true, animate);
         }
 
         public Task PushNewNavigationServiceModal(MasterDetailNavigationContainer masterDetailContainer, BaseViewModel basePageModel = null, bool animate = true)
@@ -231,18 +231,18 @@ namespace Xamarin.Forms
 
         public async Task PopModalNavigationService(bool animate = true)
         {
-            var currentNavigationService = FormsIoC.Container.Resolve<INavigationService>(currentViewModel.CurrentNavigationServiceName);
+            var currentNavigationService = TinyIoC.TinyIoC.Container.Resolve<INavigationService>(currentViewModel.CurrentNavigationServiceName);
             currentNavigationService.NotifyChildrenPageWasPopped();
 
-            FormsIoC.Container.Unregister<INavigationService>(currentViewModel.CurrentNavigationServiceName);
+            TinyIoC.TinyIoC.Container.Unregister<INavigationService>(currentViewModel.CurrentNavigationServiceName);
 
             var navServiceName = currentViewModel.PreviousNavigationServiceName;
-            await FormsIoC.Container.Resolve<INavigationService>(navServiceName).PopPage(animate);
+            await TinyIoC.TinyIoC.Container.Resolve<INavigationService>(navServiceName).PopPage(animate);
         }
 
         public void SwitchOutRootNavigation(string navigationServiceName)
         {
-            INavigationService rootNavigation = FormsIoC.Container.Resolve<INavigationService>(navigationServiceName);
+            INavigationService rootNavigation = TinyIoC.TinyIoC.Container.Resolve<INavigationService>(navigationServiceName);
 
             if (!(rootNavigation is Page))
                 throw new Exception("Navigation service is not a page");
@@ -252,7 +252,7 @@ namespace Xamarin.Forms
 
         public Task<BaseViewModel> SwitchSelectedRootPageModel<T>() where T : BaseViewModel
         {
-            return FormsIoC.Container.Resolve<INavigationService>(currentViewModel.CurrentNavigationServiceName).SwitchSelectedRootViewModel<T>();
+            return TinyIoC.TinyIoC.Container.Resolve<INavigationService>(currentViewModel.CurrentNavigationServiceName).SwitchSelectedRootViewModel<T>();
         }
 
         public Task<BaseViewModel> SwitchSelectedTab<T>() where T : BaseViewModel

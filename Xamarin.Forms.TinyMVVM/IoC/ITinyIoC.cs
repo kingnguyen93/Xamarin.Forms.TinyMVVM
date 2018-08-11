@@ -1,9 +1,8 @@
 ﻿using System;
-using TinyIoC;
 
-namespace Xamarin.Forms.IoC
+namespace TinyIoC
 {
-    public interface IFormsIoC
+    public interface ITinyIoC
     {
         object Resolve(Type resolveType);
 

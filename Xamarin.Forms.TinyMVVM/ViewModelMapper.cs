@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Xamarin.Forms
+namespace TinyMVVM
 {
     public class ViewModelMapper
     {
@@ -13,8 +13,7 @@ namespace Xamarin.Forms
         public static string GetViewModelTypeName(Type viewType)
         {
             return viewType.AssemblyQualifiedName
-                .Replace("View", "ViewModel")
-                .Replace("ViewModel", "");
+                .Replace("View", "ViewModel");
         }
     }
 }

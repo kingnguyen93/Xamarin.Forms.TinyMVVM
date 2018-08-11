@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Xamarin.Forms;
 
-namespace Xamarin.Forms
+namespace TinyMVVM
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
@@ -40,23 +41,7 @@ namespace Xamarin.Forms
         /// A reference to the current page, that's automatically filled, on push
         /// </summary>
         public NavigationParameters Parameters { get; set; } = new NavigationParameters();
-
-        /// <summary>
-        /// This method is called when a page is Pop'd, it also allows for data to be returned.
-        /// </summary>
-        /// <param name="returnedData">This data that's returned from </param>
-        public virtual void ReverseInit(object returnedData)
-        {
-        }
-
-        /// <summary>
-        /// This method is called when the PageModel is loaded, the initData is the data that's sent from pagemodel before
-        /// </summary>
-        /// <param name="data">Data that's sent to this PageModel from the pusher</param>
-        public virtual void Init(object data)
-        {
-        }
-
+        
         /// <summary>
         /// Is true when this model is the first of a new navigation stack
         /// </summary>
@@ -111,10 +96,32 @@ namespace Xamarin.Forms
         {
         }
 
+        /// <summary>
+        /// This method is called when the PageModel is loaded, the initData is the data that's sent from pagemodel before
+        /// </summary>
+        /// <param name="data">Data that's sent to this PageModel from the pusher</param>
+        public virtual void Init(object data)
+        {
+        }
+
+        /// <summary>
+        /// This method is called when a page is Pop'd, it also allows for data to be returned.
+        /// </summary>
+        /// <param name="returnedData">This data that's returned from </param>
+        public virtual void ReverseInit(object returnedData)
+        {
+        }
+
+        /// <summary>
+        /// This method is called when the PageModel is created.
+        /// </summary>
         public virtual void OnCreated()
         {
         }
 
+        /// <summary>
+        /// This method is called when a page is Pop'd.
+        /// </summary>
         public virtual void OnDisposed()
         {
         }

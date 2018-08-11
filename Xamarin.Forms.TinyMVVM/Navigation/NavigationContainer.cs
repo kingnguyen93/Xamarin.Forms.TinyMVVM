@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Xamarin.Forms.IoC;
+using Xamarin.Forms;
 
-namespace Xamarin.Forms
+namespace TinyMVVM
 {
     public class NavigationContainer : NavigationPage, INavigationService
     {
@@ -25,7 +25,7 @@ namespace Xamarin.Forms
 
         protected void RegisterNavigation()
         {
-            FormsIoC.Container.Register<INavigationService>(this, NavigationServiceName);
+            TinyIoC.TinyIoC.Container.Register<INavigationService>(this, NavigationServiceName);
         }
 
         internal Page CreateContainerPageSafe(Page page)

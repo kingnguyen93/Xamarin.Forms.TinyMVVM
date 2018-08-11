@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Xamarin.Forms.IoC;
+using Xamarin.Forms;
 
-namespace Xamarin.Forms
+namespace TinyMVVM
 {
     /// <summary>
     /// This Tabbed navigation container for when you only want the tabs to appear on the first page and then push to a second page without tabs
@@ -31,7 +31,7 @@ namespace Xamarin.Forms
 
         protected void RegisterNavigation()
         {
-            FormsIoC.Container.Register<INavigationService>(this, NavigationServiceName);
+            TinyIoC.TinyIoC.Container.Register<INavigationService>(this, NavigationServiceName);
         }
 
         public virtual Page AddTab<T>(string title, string icon, object data = null) where T : BaseViewModel

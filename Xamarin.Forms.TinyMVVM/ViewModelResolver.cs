@@ -1,7 +1,7 @@
 ﻿using System;
-using Xamarin.Forms.IoC;
+using Xamarin.Forms;
 
-namespace Xamarin.Forms
+namespace TinyMVVM
 {
     public static class ViewModelResolver
     {
@@ -12,7 +12,7 @@ namespace Xamarin.Forms
 
         public static Page ResolveViewModel<T>(object data) where T : BaseViewModel
         {
-            var viewModel = FormsIoC.Container.Resolve<T>();
+            var viewModel = TinyIoC.TinyIoC.Container.Resolve<T>();
             return ResolveViewModel(viewModel, data);
         }
 
@@ -23,13 +23,13 @@ namespace Xamarin.Forms
 
         public static Page ResolveViewModel(Type type)
         {
-            var viewModel = FormsIoC.Container.Resolve(type) as BaseViewModel;
+            var viewModel = TinyIoC.TinyIoC.Container.Resolve(type) as BaseViewModel;
             return ResolveViewModel(viewModel, null);
         }
 
         public static Page ResolveViewModel(Type type, object data)
         {
-            var viewModel = FormsIoC.Container.Resolve(type) as BaseViewModel;
+            var viewModel = TinyIoC.TinyIoC.Container.Resolve(type) as BaseViewModel;
             return ResolveViewModel(viewModel, data);
         }
 
@@ -40,7 +40,7 @@ namespace Xamarin.Forms
             if (pageType == null)
                 throw new Exception(pageName + " not found");
 
-            var page = (Page)FormsIoC.Container.Resolve(pageType);
+            var page = (Page)TinyIoC.TinyIoC.Container.Resolve(pageType);
 
             return BindingPageModel(page, viewModel, data);
         }

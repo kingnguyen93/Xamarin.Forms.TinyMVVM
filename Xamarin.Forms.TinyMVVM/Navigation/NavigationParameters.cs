@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace Xamarin.Forms
+namespace TinyMVVM
 {
     public class NavigationParameters : IEnumerable<KeyValuePair<string, object>>
     {

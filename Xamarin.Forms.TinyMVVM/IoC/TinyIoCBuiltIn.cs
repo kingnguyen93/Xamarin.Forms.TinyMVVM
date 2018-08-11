@@ -1,12 +1,11 @@
 ﻿using System;
-using TinyIoC;
 
-namespace Xamarin.Forms.IoC
+namespace TinyIoC
 {
     /// <summary>
     /// Built in TinyIOC for ease of use
     /// </summary>
-    public class TinyIoCBuiltIn : IFormsIoC
+    public class TinyIoCBuiltIn : ITinyIoC
     {
         public static TinyIoCContainer Current
         {

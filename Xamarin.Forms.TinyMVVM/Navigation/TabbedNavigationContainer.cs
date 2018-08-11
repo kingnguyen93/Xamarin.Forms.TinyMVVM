@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Xamarin.Forms.IoC;
+using Xamarin.Forms;
 
-namespace Xamarin.Forms
+namespace TinyMVVM
 {
     public class TabbedNavigationContainer : TabbedPage, INavigationService
     {
@@ -23,7 +22,7 @@ namespace Xamarin.Forms
 
         protected void RegisterNavigation()
         {
-            FormsIoC.Container.Register<INavigationService>(this, NavigationServiceName);
+            TinyIoC.TinyIoC.Container.Register<INavigationService>(this, NavigationServiceName);
         }
 
         public virtual Page AddTab<T>(string title, string icon, object data = null) where T : BaseViewModel

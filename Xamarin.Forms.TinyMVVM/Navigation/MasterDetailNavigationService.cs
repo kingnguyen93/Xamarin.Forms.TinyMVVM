@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using Xamarin.Forms.IoC;
+using Xamarin.Forms;
 
-namespace Xamarin.Forms
+namespace TinyMVVM
 {
     public class MasterDetailNavigationContainer : MasterDetailPage, INavigationService
     {
@@ -14,8 +14,7 @@ namespace Xamarin.Forms
         private ListView listView = new ListView();
         private List<Page> pagesInner = new List<Page>();
 
-        private Dictionary<string, Page> _pages = new Dictionary<string, Page>();
-        public Dictionary<string, Page> Pages { get => _pages; }
+        public Dictionary<string, Page> Pages { get; } = new Dictionary<string, Page>();
 
         protected ObservableCollection<string> PageNames { get; } = new ObservableCollection<string>();
 
@@ -37,45 +36,7 @@ namespace Xamarin.Forms
 
         protected virtual void RegisterNavigation()
         {
-            FormsIoC.Container.Register<INavigationService>(this, NavigationServiceName);
-        }
-
-        public virtual void AddPage<T>(string title, object data = null) where T : BaseViewModel
-        {
-            var page = ViewModelResolver.ResolveViewModel<T>(data);
-            page.GetModel().CurrentNavigationServiceName = NavigationServiceName;
-            pagesInner.Add(page);
-            var navigationContainer = CreateContainerPage(page);
-            Pages.Add(title, navigationContainer);
-            PageNames.Add(title);
-            if (Pages.Count == 1)
-                Detail = navigationContainer;
-        }
-
-        public virtual void AddPage(string modelName, string title, object data = null)
-        {
-            var pageModelType = Type.GetType(modelName);
-            var page = ViewModelResolver.ResolveViewModel(pageModelType, data);
-            page.GetModel().CurrentNavigationServiceName = NavigationServiceName;
-            pagesInner.Add(page);
-            var navigationContainer = CreateContainerPage(page);
-            Pages.Add(title, navigationContainer);
-            PageNames.Add(title);
-            if (Pages.Count == 1)
-                Detail = navigationContainer;
-        }
-
-        internal Page CreateContainerPageSafe(Page root)
-        {
-            if (root is NavigationPage || root is MasterDetailPage || root is TabbedPage)
-                return root;
-
-            return CreateContainerPage(root);
-        }
-
-        protected virtual Page CreateContainerPage(Page root)
-        {
-            return new NavigationPage(root);
+            TinyIoC.TinyIoC.Container.Register<INavigationService>(this, NavigationServiceName);
         }
 
         protected virtual void CreateMenuPage(string menuPageTitle, string menuIcon = null)
@@ -104,6 +65,51 @@ namespace Xamarin.Forms
                 navPage.Icon = menuIcon;
 
             Master = navPage;
+        }
+
+        public virtual void AddPage<T>(string title, object data = null) where T : BaseViewModel
+        {
+            var page = ViewModelResolver.ResolveViewModel<T>(data);
+            page.GetModel().CurrentNavigationServiceName = NavigationServiceName;
+            AddPage(page, title);
+        }
+
+        public virtual void AddPage(string modelName, string title, object data = null)
+        {
+            var pageModelType = Type.GetType(modelName);
+            var page = ViewModelResolver.ResolveViewModel(pageModelType, data);
+            page.GetModel().CurrentNavigationServiceName = NavigationServiceName;
+            AddPage(page, title);
+        }
+
+        public virtual void AddPage(Type pageType, string title, object data = null)
+        {
+            var page = ViewModelResolver.ResolveViewModel(pageType, data);
+            page.GetModel().CurrentNavigationServiceName = NavigationServiceName;
+            AddPage(page, title);
+        }
+
+        private void AddPage(Page page, string title)
+        {
+            pagesInner.Add(page);
+            var navigationContainer = CreateContainerPage(page);
+            Pages.Add(title, navigationContainer);
+            PageNames.Add(title);
+            if (Pages.Count == 1)
+                Detail = navigationContainer;
+        }
+
+        internal Page CreateContainerPageSafe(Page root)
+        {
+            if (root is NavigationPage || root is MasterDetailPage || root is TabbedPage)
+                return root;
+
+            return CreateContainerPage(root);
+        }
+
+        protected virtual Page CreateContainerPage(Page root)
+        {
+            return new NavigationPage(root);
         }
 
         public Task PushPage(Page page, BaseViewModel model, bool modal = false, bool animate = true)

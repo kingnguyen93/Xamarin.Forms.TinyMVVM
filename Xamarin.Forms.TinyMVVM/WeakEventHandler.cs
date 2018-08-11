@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace Xamarin.Forms
+namespace TinyMVVM
 {
     public sealed class WeakEventHandler<TEventArgs> where TEventArgs : EventArgs
     {

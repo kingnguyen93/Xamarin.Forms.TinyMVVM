@@ -1,14 +1,14 @@
-﻿namespace Xamarin.Forms.IoC
+﻿namespace TinyIoC
 {
-    public class FormsIoC
+    public class TinyIoC
     {
-        static FormsIoC()
+        static TinyIoC()
         {
         }
 
-        private static IFormsIoC _formsIoCContainer;
+        private static ITinyIoC _formsIoCContainer;
 
-        public static IFormsIoC Container
+        public static ITinyIoC Container
         {
             get
             {
@@ -19,7 +19,7 @@
             }
         }
 
-        public static void OverrideContainer(IFormsIoC overrideContainer)
+        public static void OverrideContainer(ITinyIoC overrideContainer)
         {
             _formsIoCContainer = overrideContainer;
         }

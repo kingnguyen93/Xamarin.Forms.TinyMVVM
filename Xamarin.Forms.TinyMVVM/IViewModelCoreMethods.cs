@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
-namespace Xamarin.Forms
+namespace TinyMVVM
 {
     public interface IViewModelCoreMethods
     {
