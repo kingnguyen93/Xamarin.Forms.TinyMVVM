@@ -30,16 +30,20 @@ The Primary form of Navigation in FreshMvvm is PageModel to PageModel, this esse
 
 So to Navigate between PageModels use:
 
+```csharp
     await CoreMethods.PushPageModel<QuotePageModel>(); // Pushes navigation stack
     await CoreMethods.PushPageModel<QuotePageModel>(null, true); // Pushes a Modal
+```
 
 The engine for Navigation in FreshMvvm is done via a simple interface, with methods for Push and Pop. Essentially these methods can control the Navigation of the application in any way they like.
 
+```csharp
     public interface IFreshNavigationService
     {
     	Task PushPage(Page page, FreshBasePageModel model, bool modal = false);
     	Task PopPage(bool modal = false);
     }
+```
 
 Within the PushPage and PopPage you can do any type of navigation that you like, this can be anything from a simple navigation to a advanced nested navigation.
 
@@ -47,24 +51,30 @@ The Framework contains some built in Navigation containers for the different typ
 
 ###### Basic Navigation - Built In
 
+```csharp
     var page = FreshPageModelResolver.ResolvePageModel<MainMenuPageModel> ();
     var basicNavContainer = new FreshNavigationContainer (page);
     MainPage = basicNavContainer;
+```
 
 ###### Master Detail - Built In
 
+```csharp
     var masterDetailNav = new FreshMasterDetailNavigationContainer ();
     masterDetailNav.Init ("Menu");
     masterDetailNav.AddPage<ContactListPageModel> ("Contacts", null);
     masterDetailNav.AddPage<QuoteListPageModel> ("Pages", null);
     MainPage = masterDetailNav;
+```
 
 ###### Tabbed Navigation - Built In
 
+```csharp
     var tabbedNavigation = new FreshTabbedNavigationContainer ();
     tabbedNavigation.AddTab<ContactListPageModel> ("Contacts", null);
     tabbedNavigation.AddTab<QuoteListPageModel> ("Pages", null);
     MainPage = tabbedNavigation;
+```
 
 ###### Implementing Custom Navigation
 It's possible to setup any type of Navigation by implementing IFreshNavigationService.There's a sample of this in Sample Application named CustomImplementedNav.cs.
@@ -80,17 +90,22 @@ So that you don't need to include your own IOC container, FreshMvvm comes with a
 
 ##### To Register services in the container use Register:
 
+```csharp
     FreshIOC.Container.Register<IDatabaseService, DatabaseService>();
+```
 
 ##### To obtain a service use Resolve:
 
+```csharp
     FreshIOC.Container.Resolve<IDatabaseService>();
+```
 
 *This is also what drives constructor injection.
 
 #### IOC Container Lifetime Registration Options
 We now support a fluent API for setting the object lifetime of object inside the IOC Container.
 
+```csharp
     // By default we register concrete types as 
     // multi-instance, and interfaces as singletons
     FreshIOC.Container.Register<MyConcreteType>(); // Multi-instance
@@ -99,9 +114,11 @@ We now support a fluent API for setting the object lifetime of object inside the
     // Fluent API allows us to change that behaviour
     FreshIOC.Container.Register<MyConcreteType>().AsSingleton(); // Singleton
     FreshIOC.Container.Register<IMyInterface, MyConcreteType>().AsMultiInstance(); // Multi-instance
+```
 
 As you can see below the IFreshIOC interface methods return the IRegisterOptions interface.
 
+```csharp
     public interface IFreshIOC
     {
         object Resolve(Type resolveType);
@@ -124,14 +141,18 @@ The interface that's returned from the register methods is IRegisterOptions.
         IRegisterOptions WithStrongReference();
         IRegisterOptions UsingConstructor<RegisterType>(Expression<Func<RegisterType>> constructor);
     }
+```
 
 #### PageModel - Constructor Injection
 When PageModels are pushed services that are in the IOC container can be pushed into the Constructor.
 
+```csharp
     FreshIOC.Container.Register<IDatabaseService, DatabaseService>();
+```
 
 #### PageModel Important Methods
 
+```csharp
         /// <summary>
         /// The previous page model, that's automatically filled, on push
         /// </summary>
@@ -190,10 +211,12 @@ When PageModels are pushed services that are in the IOC container can be pushed 
         protected virtual void ViewIsDisappearing (object sender, EventArgs e)
         {
         }
+```
 
 #### The CoreMethods
 Each PageModel has a property called 'CoreMethods' which is automatically filled when a PageModel is pushed, it's the basic functions that most apps need like Alerts, Pushing, Poping etc.
 
+```csharp
     public interface IPageModelCoreMethods
     {
     	Task DisplayAlert (string title, string message, string cancel);
@@ -204,6 +227,7 @@ Each PageModel has a property called 'CoreMethods' which is automatically filled
     	Task PopPageModel(object data, bool modal = false);
     	Task PushPageModel<T>() where T : FreshBasePageModel;
     }
+```
 
 #### Multiple Navigation Services
 It’s always been possible to do any type of navigation in FreshMvvm, with custom or advanced scenarios were done by implementing a custom navigation service. Even with this ability people found it a little hard to do advanced navigation scenarios in FreshMvvm. After I reviewed all the support questions that came in for FreshMvvm I found that the basic issue people had was they wanted to be able to use our built in navigation containers multiple times, two primary examples are 1) within a master detail having a navigation stack in a master and another in the detail 2) The ability to push modally with a new navigation container. In order to support both these scenarios I concluded that the FreshMvvm required the ability to have named NavigationServices so that we could support multiple NavigationService’s.
@@ -211,6 +235,7 @@ It’s always been possible to do any type of navigation in FreshMvvm, with cust
 #### Using multiple navigation containers
 Below we’re running two navigation stacks, in a single MasterDetail.
 
+```csharp
     var masterDetailsMultiple = new MasterDetailPage (); //generic master detail page
     
     //we setup the first navigation container with ContactList
@@ -231,9 +256,11 @@ Below we’re running two navigation stacks, in a single MasterDetail.
     masterDetailsMultiple.Detail = detailPageArea; //set the second navigation container to the Detail
     
     MainPage = masterDetailsMultiple;
+```
 
 #### PushModally with new navigation stack
 
+```csharp
     //push a basic page Modally
     var page = FreshPageModelResolver.ResolvePageModel<MainMenuPageModel> ();
     var basicNavContainer = new FreshNavigationContainer (page, "secondNavPage");
@@ -251,20 +278,24 @@ Below we’re running two navigation stacks, in a single MasterDetail.
     masterDetailNav.AddPage<ContactListPageModel> ("Contacts", null);
     masterDetailNav.AddPage<QuoteListPageModel> ("Quotes", null);
     await CoreMethods.PushNewNavigationServiceModal(masterDetailNav);
+```
 
 #### Switching out NavigationStacks on the Xamarin.Forms MainPage
 There's some cases in Xamarin.Forms you might want to run multiple navigation stacks. A good example of this is when you have a navigation stack for the authentication and a stack for the primary area of your application.
 
 To begin with we can setup some names for our navigation containers.
 
+```csharp
     public class NavigationContainerNames
     {
         public const string AuthenticationContainer = "AuthenticationContainer";
         public const string MainContainer = "MainContainer";
     }
+```
 
 Then we can create our two navigation containers and assign to the MainPage.
 
+```csharp
     var loginPage = FreshMvvm.FreshPageModelResolver.ResolvePageModel<LoginViewModel>();
     var loginContainer = new FreshNavigationContainer(loginPage, NavigationContainerNames.AuthenticationContainer);
     
@@ -283,23 +314,28 @@ Then we can create our two navigation containers and assign to the MainPage.
     {
         FreshIOC.Container.Register<IFreshNavigationService> (this, NavigationServiceName);
     }
+```
 
 Once we've set this up we can now switch out our navigation containers.
 
+```csharp
     CoreMethods.SwitchOutRootNavigation(NavigationContainerNames.MainContainer);
-
+```
 That name will be resolved in this method to find the correct Navigation Container
 
+```csharp
     public void SwitchOutRootNavigation (string navigationServiceName)
     {
         IFreshNavigationService rootNavigation = FreshIOC.Container.Resolve<IFreshNavigationService> (navigationServiceName);
     }
+```
 
 #### Custom IOC Containers
 The second major request for FreshMvvm 1.0 was to allow custom IOC containers. In the case that your application already has a container that you want to leverage.
 
 Using a custom IOC container is very simple in that you only need to implement a single interface.
 
+```csharp
     public interface IFreshIOC
     {
         object Resolve(Type resolveType);
@@ -311,17 +347,20 @@ Using a custom IOC container is very simple in that you only need to implement a
             where RegisterType : class
             where RegisterImplementation : class, RegisterType;
     }
+```
 
 And then set the IOC container in the System.
 
+```csharp
     FreshIOC.OverrideContainer(myContainer);
-
+```
 #### Other Features
 ##### WhenAny
 WhenAny is an extension method on INotifyPropertyChanged, it's a shorthand way to subscribe to a property changed event.
 
 In the example below, we use any to link up
 
+```csharp
     [PropertyChanged.AddINotifyPropertyChangedInterface]
     public class ContactPageModel : FreshBasePageModel
     {
@@ -337,3 +376,4 @@ In the example below, we use any to link up
     
         public Contact Contact { get; set; }
     }
+```
