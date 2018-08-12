@@ -118,7 +118,7 @@ namespace Xamarin.Forms.TinyMVVM
         }
 
         /// <summary>
-        /// This method is called when a page is Push'd.
+        /// This method is called when a page is Push'd or is set as page root in navigation stack.
         /// </summary>
         public virtual void OnCreated()
         {
@@ -155,16 +155,7 @@ namespace Xamarin.Forms.TinyMVVM
             {
                 _navigationPage = navPage;
                 _alreadyAttached = true;
-                navPage.Pushed += new WeakEventHandler<NavigationEventArgs>(HandleNavPagePushed).Handler;
                 navPage.Popped += new WeakEventHandler<NavigationEventArgs>(HandleNavPagePopped).Handler;
-            }
-        }
-
-        private void HandleNavPagePushed(object sender, NavigationEventArgs e)
-        {
-            if (e.Page == CurrentPage)
-            {
-                OnCreated();
             }
         }
 

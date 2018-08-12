@@ -17,14 +17,35 @@ namespace Xamarin.Forms.TinyMVVM
         {
             var viewModel = root.GetModel();
             if (viewModel != null)
+            {
                 viewModel.CurrentNavigationServiceName = navigationPageName;
+                viewModel.OnCreated();
+            }
             NavigationServiceName = navigationPageName;
             RegisterNavigation();
+            Pushed += NavigationContainer_Pushed;
+            Popped += NavigationContainer_Popped;
         }
 
         protected void RegisterNavigation()
         {
             TinyIOC.Container.Register<INavigationService>(this, NavigationServiceName);
+        }
+
+        private void NavigationContainer_Pushed(object sender, NavigationEventArgs e)
+        {
+            if (e.Page.GetModel() is TinyViewModel viewModel)
+            {
+                viewModel.OnCreated();
+            }
+        }
+
+        private void NavigationContainer_Popped(object sender, NavigationEventArgs e)
+        {
+            if (e.Page.GetModel() is TinyViewModel viewModel)
+            {
+                viewModel.OnDisposed();
+            }
         }
 
         internal Page CreateContainerPageSafe(Page page)
