@@ -24,7 +24,7 @@ namespace Xamarin.Forms.TinyMVVM
 
         protected void RegisterNavigation()
         {
-            TinyIoC.Container.Register<INavigationService>(this, NavigationServiceName);
+            TinyIOC.Container.Register<INavigationService>(this, NavigationServiceName);
         }
 
         internal Page CreateContainerPageSafe(Page page)

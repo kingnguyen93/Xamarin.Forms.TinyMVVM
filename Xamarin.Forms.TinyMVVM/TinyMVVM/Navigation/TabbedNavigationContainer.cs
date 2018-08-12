@@ -21,7 +21,7 @@ namespace Xamarin.Forms.TinyMVVM
 
         protected void RegisterNavigation()
         {
-            TinyIoC.Container.Register<INavigationService>(this, NavigationServiceName);
+            TinyIOC.Container.Register<INavigationService>(this, NavigationServiceName);
         }
 
         public virtual Page AddTab<T>(string title, string icon, object data = null) where T : TinyViewModel

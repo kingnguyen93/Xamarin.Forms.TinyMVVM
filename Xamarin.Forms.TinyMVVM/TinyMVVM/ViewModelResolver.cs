@@ -11,7 +11,7 @@ namespace Xamarin.Forms.TinyMVVM
 
         public static Page ResolveViewModel<T>(object data) where T : TinyViewModel
         {
-            var viewModel = TinyIoC.Container.Resolve<T>();
+            var viewModel = TinyIOC.Container.Resolve<T>();
             return ResolveViewModel(viewModel, data);
         }
 
@@ -22,13 +22,13 @@ namespace Xamarin.Forms.TinyMVVM
 
         public static Page ResolveViewModel(Type type)
         {
-            var viewModel = TinyIoC.Container.Resolve(type) as TinyViewModel;
+            var viewModel = TinyIOC.Container.Resolve(type) as TinyViewModel;
             return ResolveViewModel(viewModel, null);
         }
 
         public static Page ResolveViewModel(Type type, object data)
         {
-            var viewModel = TinyIoC.Container.Resolve(type) as TinyViewModel;
+            var viewModel = TinyIOC.Container.Resolve(type) as TinyViewModel;
             return ResolveViewModel(viewModel, data);
         }
 
@@ -39,7 +39,7 @@ namespace Xamarin.Forms.TinyMVVM
             if (pageType == null)
                 throw new Exception(pageName + " not found");
 
-            var page = (Page)TinyIoC.Container.Resolve(pageType);
+            var page = (Page)TinyIOC.Container.Resolve(pageType);
 
             return BindingPageModel(page, viewModel, data);
         }

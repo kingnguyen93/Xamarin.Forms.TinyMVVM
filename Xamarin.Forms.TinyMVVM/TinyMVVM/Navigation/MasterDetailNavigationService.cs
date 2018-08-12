@@ -35,7 +35,7 @@ namespace Xamarin.Forms.TinyMVVM
 
         protected virtual void RegisterNavigation()
         {
-            TinyIoC.Container.Register<INavigationService>(this, NavigationServiceName);
+            TinyIOC.Container.Register<INavigationService>(this, NavigationServiceName);
         }
 
         protected virtual void CreateMenuPage(string menuPageTitle, string menuIcon = null)

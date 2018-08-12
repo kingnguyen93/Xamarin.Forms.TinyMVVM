@@ -3,7 +3,7 @@ using TinyIoC;
 
 namespace Xamarin.Forms.TinyMVVM
 {
-    public interface ITinyIoC
+    public interface ITinyIOC
     {
         object Resolve(Type resolveType);
 

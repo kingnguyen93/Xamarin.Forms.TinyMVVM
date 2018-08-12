@@ -1,25 +1,25 @@
 ﻿namespace Xamarin.Forms.TinyMVVM
 {
-    public class TinyIoC
+    public class TinyIOC
     {
-        static TinyIoC()
+        static TinyIOC()
         {
         }
 
-        private static ITinyIoC _formsIoCContainer;
+        private static ITinyIOC _formsIoCContainer;
 
-        public static ITinyIoC Container
+        public static ITinyIOC Container
         {
             get
             {
                 if (_formsIoCContainer == null)
-                    _formsIoCContainer = new TinyIoCBuiltIn();
+                    _formsIoCContainer = new TinyIOCBuiltIn();
 
                 return _formsIoCContainer;
             }
         }
 
-        public static void OverrideContainer(ITinyIoC overrideContainer)
+        public static void OverrideContainer(ITinyIOC overrideContainer)
         {
             _formsIoCContainer = overrideContainer;
         }

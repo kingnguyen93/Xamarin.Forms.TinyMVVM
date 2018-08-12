@@ -6,7 +6,7 @@ namespace Xamarin.Forms.TinyMVVM
     /// <summary>
     /// Built in TinyIOC for ease of use
     /// </summary>
-    public class TinyIoCBuiltIn : ITinyIoC
+    public class TinyIOCBuiltIn : ITinyIOC
     {
         public static TinyIoCContainer Current
         {
