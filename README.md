@@ -92,13 +92,13 @@ So that you don't need to include your own IoC container, TinyMVVM comes with a 
 #### To Register services in the container use Register:
 
 ```csharp
-    TinyIoC.Container.Register<IDatabaseService, DatabaseService>();
+    TinyIOC.Container.Register<IDatabaseService, DatabaseService>();
 ```
 
 #### To obtain a service use Resolve:
 
 ```csharp
-    TinyIoC.Container.Resolve<IDatabaseService>();
+    TinyIOC.Container.Resolve<IDatabaseService>();
 ```
 
 *This is also what drives constructor injection.
@@ -109,18 +109,18 @@ We now support a fluent API for setting the object lifetime of object inside the
 ```csharp
     // By default we register concrete types as 
     // multi-instance, and interfaces as singletons
-    TinyIoC.Container.Register<MyConcreteType>(); // Multi-instance
-    TinyIoC.Container.Register<IMyInterface, MyConcreteType>(); // Singleton 
+    TinyIOC.Container.Register<MyConcreteType>(); // Multi-instance
+    TinyIOC.Container.Register<IMyInterface, MyConcreteType>(); // Singleton 
     
     // Fluent API allows us to change that behaviour
-    TinyIoC.Container.Register<MyConcreteType>().AsSingleton(); // Singleton
-    TinyIoC.Container.Register<IMyInterface, MyConcreteType>().AsMultiInstance(); // Multi-instance
+    TinyIOC.Container.Register<MyConcreteType>().AsSingleton(); // Singleton
+    TinyIOC.Container.Register<IMyInterface, MyConcreteType>().AsMultiInstance(); // Multi-instance
 ```
 
-As you can see below the ITinyIoC interface methods return the IRegisterOptions interface.
+As you can see below the ITinyIOC interface methods return the IRegisterOptions interface.
 
 ```csharp
-    public interface ITinyIoC
+    public interface ITinyIOC
     {
         object Resolve(Type resolveType);
         IRegisterOptions Register<RegisterType>(RegisterType instance) where RegisterType : class;
@@ -148,7 +148,7 @@ The interface that's returned from the register methods is IRegisterOptions.
 When ViewModels are pushed services that are in the IOC container can be pushed into the Constructor.
 
 ```csharp
-    TinyIoC.Container.Register<IDatabaseService, DatabaseService>();
+    TinyIOC.Container.Register<IDatabaseService, DatabaseService>();
 ```
 
 ### ViewModel Important Methods
@@ -324,7 +324,7 @@ The Navigation Container will use the name passed as argument to register in thi
     
     protected void RegisterNavigation()
     {
-        TinyIoC.Container.Register<INavigationService>(this, NavigationServiceName);
+        TinyIOC.Container.Register<INavigationService>(this, NavigationServiceName);
     }
 ```
 
@@ -338,7 +338,7 @@ That name will be resolved in this method to find the correct Navigation Contain
 ```csharp
     public void SwitchOutRootNavigation(string navigationServiceName)
     {
-        INavigationService rootNavigation = TinyIoC.Container.Resolve<INavigationService>(navigationServiceName);
+        INavigationService rootNavigation = TinyIOC.Container.Resolve<INavigationService>(navigationServiceName);
     }
 ```
 
@@ -348,7 +348,7 @@ The second major request for TinyMVVM was to allow custom IoC containers. In the
 Using a custom IoC container is very simple in that you only need to implement a single interface.
 
 ```csharp
-    public interface ITinyIoC
+    public interface ITinyIOC
     {
         object Resolve(Type resolveType);
         void Register<RegisterType>(RegisterType instance) where RegisterType : class;
@@ -364,7 +364,7 @@ Using a custom IoC container is very simple in that you only need to implement a
 And then set the IoC container in the System.
 
 ```csharp
-    TinyIoC.OverrideContainer(myContainer);
+    TinyIOC.OverrideContainer(myContainer);
 ```
 #### Other Features
 ##### WhenAny
