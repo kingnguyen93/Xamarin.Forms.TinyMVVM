@@ -26,6 +26,28 @@ This Framework, while simple, is also powerful and uses a Convention over Config
 - A ViewModel can get multi object from NavigationParameters
 - ViewModel can have dependancies automatically injected into the Constructor
 
+### Rules of naming ViewModel and Page
+
+- A ViewModel's name must end with ViewModel
+- A Page's name name must end with Page
+
+### How to use
+
+Create class use:
+
+```csharp
+    public class YourClass : TinyViewModel
+    {
+    }
+```
+
+Create Navigaton use:
+
+```csharp
+    var page = ViewModelResolver.ResolveViewModel<YourClass>();
+    MainPage = new NavigationContainer(page);
+```
+
 ### Navigation
 The Primary form of Navigation in TinyMVVM is ViewModel to ViewModel, this essentially means our views have no idea of Navigation.
 
@@ -47,6 +69,47 @@ The engine for Navigation in TinyMVVM is done via a simple interface, with metho
 ```
 
 Within the PushPage and PopPage you can do any type of navigation that you like, this can be anything from a simple navigation to a advanced nested navigation.
+
+###### Pass object to next page.
+
+You can pass many object via data in PushViewModel methods.
+
+```csharp
+    Task PushViewModel<T>(object data, bool modal = false, bool animate = true) where T : TinyViewModel;
+    Task PushViewModel(Type viewModelType, object data = null, bool modal = false, bool animate = true);
+    Task PushViewModel(Type viewModelType, Type pageType, object data = null, bool modal = false, bool animate = true);
+    Task PushViewModel<T, TPage>(object data, bool modal = false, bool animate = true) where T : TinyViewModel where TPage : Page;
+```
+
+Then you can get object via Init method.
+
+```csharp
+    public override void Init(object data)
+    {
+        base.Init(data);
+        var value = (ClassType)data;
+    }
+```
+
+###### Pass many object to next page.
+
+You can pass many object via Parameters
+
+```csharp
+    Task PushViewModel<T>(NavigationParameters parameters, bool modal = false, bool animate = true) where T : TinyViewModel;
+    Task PushViewModel(Type viewModelType, NavigationParameters parameters, bool modal = false, bool animate = true);
+    Task PushViewModel(Type viewModelType, Type pageType, NavigationParameters parameters, bool modal = false, bool animate = true);
+    Task PushViewModel<T, TPage>(NavigationParameters parameters, bool modal = false, bool animate = true) where T : TinyViewModel where TPage : Page;
+```
+Then you can get Parameters's Value from Overide Method (Init, OnPageCreated, OnPushed), Parameters's Value is still Null at Constructor.
+
+```csharp
+    public override void OnPageCreated()
+    {
+        base.OnPageCreated();
+        var value = Parameters.GetValue<YourClass>("ClassName");
+    }
+```
 
 The Framework contains some built in Navigation containers for the different types of Navigation.
 
@@ -168,6 +231,11 @@ When ViewModels are pushed services that are in the IOC container can be pushed 
         /// Core methods are basic built in methods for the App including Pushing, Pop and Alert
         /// </summary>
         public IViewModelCoreMethods CoreMethods { get; set; }
+        
+        /// <summary>
+        /// Parameters passed from previous ViewModel
+        /// </summary>
+        public NavigationParameters Parameters { get; set; } = new NavigationParameters();
     
         /// <summary>
         /// This method is called when the ViewModel is loaded, the initData is the data that's sent from ViewModel before
@@ -184,16 +252,30 @@ When ViewModels are pushed services that are in the IOC container can be pushed 
         public virtual void ReverseInit(object returndData)
         {
         }
-    
+
         /// <summary>
-        /// This method is called when the page is Push'd.
+        /// This method is called when after page is created and bindingcontext is assigned to page.
         /// </summary>
-        public virtual void OnCreated()
+        public virtual void OnPageCreated()
         {
         }
     
         /// <summary>
+        /// This method is called when a page is Push'd or is set as page root in navigation stack.
+        /// </summary>
+        public virtual void OnPushed()
+        {
+        }
+
+        /// <summary>
         /// This method is called when a page is Pop'd.
+        /// </summary>
+        public virtual void OnPopped()
+        {
+        }
+
+        /// <summary>
+        /// This method is called at destructor.
         /// </summary>
         public virtual void OnDisposed()
         {
@@ -220,20 +302,24 @@ Each ViewModel has a property called 'CoreMethods' which is automatically filled
 ```csharp
     public interface IViewModelCoreMethods
     {
-    	Task DisplayAlert (string title, string message, string cancel);
-    	Task<string> DisplayActionSheet (string title, string cancel, string destruction, params string[] buttons);
-    	Task<bool> DisplayAlert (string title, string message, string accept, string cancel);
+        Task DisplayAlert(string title, string message, string cancel);
+        Task<bool> DisplayAlert(string title, string message, string accept, string cancel);
+        Task<string> DisplayActionSheet(string title, string cancel, string destruction, params string[] buttons);
         Task PushPage<T>(bool modal = false, bool animate = true) where T : Page;
         Task PushPage(Type pageType, bool modal = false, bool animate = true);
         Task PushPage(Page page, bool modal = false, bool animate = true);
-        Task PushViewModel<T>(object data = null, bool modal = false, bool animate = true) where T : TinyViewModel;
+        Task PushViewModel<T>(bool modal = false, bool animate = true) where T : TinyViewModel;
+        Task PushViewModel<T>(object data, bool modal = false, bool animate = true) where T : TinyViewModel;
         Task PushViewModel<T>(NavigationParameters parameters, bool modal = false, bool animate = true) where T : TinyViewModel;
-        Task PushViewModel<T, TPage>(object data = null, bool modal = false, bool animate = true) where T : TinyViewModel where TPage : Page;
-        Task PushViewModel<T, TPage>(NavigationParameters parameters, bool modal = false, bool animate = true) where T : TinyViewModel where TPage : Page;
+        Task PushViewModel(Type viewModelType, bool modal = false, bool animate = true);
         Task PushViewModel(Type viewModelType, object data = null, bool modal = false, bool animate = true);
         Task PushViewModel(Type viewModelType, NavigationParameters parameters, bool modal = false, bool animate = true);
+        Task PushViewModel(Type viewModelType, Type pageType, bool modal = false, bool animate = true);
         Task PushViewModel(Type viewModelType, Type pageType, object data = null, bool modal = false, bool animate = true);
         Task PushViewModel(Type viewModelType, Type pageType, NavigationParameters parameters, bool modal = false, bool animate = true);
+        Task PushViewModel<T, TPage>(bool modal = false, bool animate = true) where T : TinyViewModel where TPage : Page;
+        Task PushViewModel<T, TPage>(object data, bool modal = false, bool animate = true) where T : TinyViewModel where TPage : Page;
+        Task PushViewModel<T, TPage>(NavigationParameters parameters, bool modal = false, bool animate = true) where T : TinyViewModel where TPage : Page;
         Task PopViewModel(bool modal = false, bool animate = true);
     }
 ```
