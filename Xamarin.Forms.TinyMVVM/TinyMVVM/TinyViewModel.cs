@@ -37,7 +37,7 @@ namespace Xamarin.Forms.TinyMVVM
         public IViewModelCoreMethods CoreMethods { get; set; }
 
         /// <summary>
-        /// A reference to the current page, that's automatically filled, on push
+        /// Parameters passed from previous ViewModel
         /// </summary>
         public NavigationParameters Parameters { get; set; } = new NavigationParameters();
 
@@ -107,7 +107,7 @@ namespace Xamarin.Forms.TinyMVVM
         }
 
         /// <summary>
-        /// This method is called when the ViewModel is loaded, the initData is the data that's sent from pagemodel before
+        /// This method is called when the ViewModel is loaded, the initData is the data that's sent from ViewModel before
         /// </summary>
         /// <param name="data">Data that's sent to this PageModel from the pusher</param>
         public virtual void Init(object data)
