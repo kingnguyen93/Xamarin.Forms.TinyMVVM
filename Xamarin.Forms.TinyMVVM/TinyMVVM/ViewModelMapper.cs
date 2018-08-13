@@ -7,13 +7,13 @@ namespace Xamarin.Forms.TinyMVVM
         public static string GetPageTypeName(Type viewModelType)
         {
             return viewModelType.AssemblyQualifiedName
-                .Replace("ViewModel", "View");
+                .Replace("ViewModel", "Page");
         }
 
         public static string GetViewModelTypeName(Type viewType)
         {
             return viewType.AssemblyQualifiedName
-                .Replace("View", "ViewModel");
+                .Replace("Page", "ViewModel");
         }
     }
 }

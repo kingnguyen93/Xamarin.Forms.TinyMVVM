@@ -19,7 +19,7 @@ namespace Xamarin.Forms.TinyMVVM
             if (viewModel != null)
             {
                 viewModel.CurrentNavigationServiceName = navigationPageName;
-                viewModel.OnCreated();
+                viewModel.OnPushed();
             }
             NavigationServiceName = navigationPageName;
             RegisterNavigation();
@@ -36,7 +36,7 @@ namespace Xamarin.Forms.TinyMVVM
         {
             if (e.Page.GetModel() is TinyViewModel viewModel)
             {
-                viewModel.OnCreated();
+                viewModel.OnPushed();
             }
         }
 
@@ -44,7 +44,7 @@ namespace Xamarin.Forms.TinyMVVM
         {
             if (e.Page.GetModel() is TinyViewModel viewModel)
             {
-                viewModel.OnDisposed();
+                viewModel.OnPopped();
             }
         }
 

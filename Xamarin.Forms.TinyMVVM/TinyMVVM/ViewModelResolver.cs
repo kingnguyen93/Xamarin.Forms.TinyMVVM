@@ -41,6 +41,7 @@ namespace Xamarin.Forms.TinyMVVM
             viewModel.CoreMethods = new ViewModelCoreMethods(targetPage, viewModel);
             viewModel.WireEvents();
             targetPage.BindingContext = viewModel;
+            viewModel.OnPageCreated();
             return targetPage;
         }
     }

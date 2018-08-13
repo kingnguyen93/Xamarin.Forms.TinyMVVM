@@ -101,6 +101,11 @@ namespace Xamarin.Forms.TinyMVVM
         {
         }
 
+        ~TinyViewModel()
+        {
+            OnDisposed();
+        }
+
         /// <summary>
         /// This method is called when the ViewModel is loaded, the initData is the data that's sent from pagemodel before
         /// </summary>
@@ -118,14 +123,28 @@ namespace Xamarin.Forms.TinyMVVM
         }
 
         /// <summary>
+        /// This method is called when after page is created and bindingcontext is assigned to page.
+        /// </summary>
+        public virtual void OnPageCreated()
+        {
+        }
+
+        /// <summary>
         /// This method is called when a page is Push'd or is set as page root in navigation stack.
         /// </summary>
-        public virtual void OnCreated()
+        public virtual void OnPushed()
         {
         }
 
         /// <summary>
         /// This method is called when a page is Pop'd.
+        /// </summary>
+        public virtual void OnPopped()
+        {
+        }
+
+        /// <summary>
+        /// This method is called at destructor.
         /// </summary>
         public virtual void OnDisposed()
         {
@@ -164,14 +183,18 @@ namespace Xamarin.Forms.TinyMVVM
             if (e.Page == CurrentPage)
             {
                 RaisePageWasPopped();
-                OnDisposed();
+                OnPopped();
             }
         }
 
         public void RaisePageWasPopped()
         {
             PageWasPopped?.Invoke(this, EventArgs.Empty);
+            ReleaseResource();
+        }
 
+        private void ReleaseResource()
+        {
             var navPage = (CurrentPage.Parent as NavigationPage);
             if (navPage != null)
                 navPage.Popped -= HandleNavPagePopped;

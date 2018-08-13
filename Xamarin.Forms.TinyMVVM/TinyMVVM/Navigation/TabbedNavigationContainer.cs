@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -27,13 +28,33 @@ namespace Xamarin.Forms.TinyMVVM
         public virtual Page AddTab<T>(string title, string icon, object data = null) where T : TinyViewModel
         {
             var page = ViewModelResolver.ResolveViewModel<T>(data);
-            page.GetModel().CurrentNavigationServiceName = NavigationServiceName;
+            return AddTab(page, title, icon);
+        }
+
+        public virtual Page AddTab(string modelName, string title, string icon, object data = null)
+        {
+            var pageModelType = Type.GetType(modelName);
+            return AddTab(pageModelType, title, icon, data);
+        }
+
+        public virtual Page AddTab(Type pageType, string title, string icon, object data = null)
+        {
+            var page = ViewModelResolver.ResolveViewModel(pageType, data);
+            return AddTab(page, title, icon);
+        }
+
+        private Page AddTab(Page page, string title, string icon)
+        {
+            var viewModel = page.GetModel();
+            viewModel.CurrentNavigationServiceName = NavigationServiceName;
             _tabs.Add(page);
             var navigationContainer = CreateContainerPageSafe(page);
             navigationContainer.Title = title;
             if (!string.IsNullOrWhiteSpace(icon))
                 navigationContainer.Icon = icon;
             Children.Add(navigationContainer);
+            viewModel.OnPushed();
+
             return navigationContainer;
         }
 

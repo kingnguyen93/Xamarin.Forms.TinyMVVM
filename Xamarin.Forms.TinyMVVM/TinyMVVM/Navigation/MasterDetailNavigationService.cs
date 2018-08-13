@@ -46,7 +46,9 @@ namespace Xamarin.Forms.TinyMVVM
             {
                 if (Pages.ContainsKey((string)args.SelectedItem))
                 {
-                    Detail = Pages[(string)args.SelectedItem];
+                    var page = Pages[(string)args.SelectedItem];
+                    Detail = page;
+                    page.GetModel().OnPushed();
                 }
 
                 IsPresented = false;
@@ -69,27 +71,24 @@ namespace Xamarin.Forms.TinyMVVM
         public virtual void AddPage<T>(string title, object data = null) where T : TinyViewModel
         {
             var page = ViewModelResolver.ResolveViewModel<T>(data);
-            page.GetModel().CurrentNavigationServiceName = NavigationServiceName;
             AddPage(page, title);
         }
 
         public virtual void AddPage(string modelName, string title, object data = null)
         {
             var pageModelType = Type.GetType(modelName);
-            var page = ViewModelResolver.ResolveViewModel(pageModelType, data);
-            page.GetModel().CurrentNavigationServiceName = NavigationServiceName;
-            AddPage(page, title);
+            AddPage(pageModelType, title, data);
         }
 
         public virtual void AddPage(Type pageType, string title, object data = null)
         {
             var page = ViewModelResolver.ResolveViewModel(pageType, data);
-            page.GetModel().CurrentNavigationServiceName = NavigationServiceName;
             AddPage(page, title);
         }
 
         private void AddPage(Page page, string title)
         {
+            page.GetModel().CurrentNavigationServiceName = NavigationServiceName;
             pagesInner.Add(page);
             var navigationContainer = CreateContainerPage(page);
             Pages.Add(title, navigationContainer);
