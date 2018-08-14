@@ -29,17 +29,17 @@ namespace Xamarin.Forms.TinyMVVM
 
         Task PushViewModel(Type viewModelType, NavigationParameters parameters, bool modal = false, bool animate = true);
 
-        Task PushViewModel(Type viewModelType, Type pageType, bool modal = false, bool animate = true);
-
-        Task PushViewModel(Type viewModelType, Type pageType, object data = null, bool modal = false, bool animate = true);
-
-        Task PushViewModel(Type viewModelType, Type pageType, NavigationParameters parameters, bool modal = false, bool animate = true);
-
         Task PushViewModel<T, TPage>(bool modal = false, bool animate = true) where T : TinyViewModel where TPage : Page;
 
         Task PushViewModel<T, TPage>(object data, bool modal = false, bool animate = true) where T : TinyViewModel where TPage : Page;
 
         Task PushViewModel<T, TPage>(NavigationParameters parameters, bool modal = false, bool animate = true) where T : TinyViewModel where TPage : Page;
+
+        Task PushViewModel(Type viewModelType, Type pageType, bool modal = false, bool animate = true);
+
+        Task PushViewModel(Type viewModelType, Type pageType, object data = null, bool modal = false, bool animate = true);
+
+        Task PushViewModel(Type viewModelType, Type pageType, NavigationParameters parameters, bool modal = false, bool animate = true);
 
         Task PopViewModel(bool modal = false, bool animate = true);
 

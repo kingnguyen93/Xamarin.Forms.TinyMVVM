@@ -61,15 +61,16 @@ namespace Xamarin.Forms.TinyMVVM
             return new NavigationPage(page);
         }
 
-        public Task PushPage(Page page, TinyViewModel model, bool modal = false, bool animate = true)
+        public virtual Task PushPage(Page page, bool modal = false, bool animate = true)
         {
             if (modal)
                 return Navigation.PushModalAsync(CreateContainerPageSafe(page), animate);
             return Navigation.PushAsync(page, animate);
         }
 
-        public virtual Task PushPage(Page page, bool modal = false, bool animate = true)
+        public Task PushPage(Page page, TinyViewModel model, bool modal = false, bool animate = true)
         {
+            ViewModelResolver.BindingPageModel(page, model);
             if (modal)
                 return Navigation.PushModalAsync(CreateContainerPageSafe(page), animate);
             return Navigation.PushAsync(page, animate);

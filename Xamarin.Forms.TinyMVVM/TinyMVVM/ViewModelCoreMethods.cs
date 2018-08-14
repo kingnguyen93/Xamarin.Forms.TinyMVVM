@@ -107,30 +107,6 @@ namespace Xamarin.Forms.TinyMVVM
             await PushPageModelWithPage(page, viewModel, modal, animate);
         }
 
-        public Task PushViewModel(Type viewModelType, Type pageType, bool modal = false, bool animate = true)
-        {
-            var viewModel = TinyIOC.Container.Resolve(viewModelType) as TinyViewModel;
-            var page = TinyIOC.Container.Resolve(pageType) as Page;
-            ViewModelResolver.BindingPageModel(page, viewModel);
-            return PushPageModelWithPage(page, viewModel, modal, animate);
-        }
-
-        public Task PushViewModel(Type viewModelType, Type pageType, object data, bool modal = false, bool animate = true)
-        {
-            var viewModel = TinyIOC.Container.Resolve(viewModelType) as TinyViewModel;
-            var page = TinyIOC.Container.Resolve(pageType) as Page;
-            ViewModelResolver.BindingPageModel(page, viewModel, data);
-            return PushPageModelWithPage(page, viewModel, modal, animate);
-        }
-
-        public Task PushViewModel(Type viewModelType, Type pageType, NavigationParameters parameters, bool modal = false, bool animate = true)
-        {
-            var viewModel = TinyIOC.Container.Resolve(viewModelType) as TinyViewModel;
-            var page = TinyIOC.Container.Resolve(pageType) as Page;
-            ViewModelResolver.BindingPageModel(page, viewModel, parameters: parameters);
-            return PushPageModelWithPage(page, viewModel, modal, animate);
-        }
-
         public async Task PushViewModel<T, TPage>(bool modal = false, bool animate = true) where T : TinyViewModel where TPage : Page
         {
             T viewModel = TinyIOC.Container.Resolve<T>();
@@ -153,6 +129,30 @@ namespace Xamarin.Forms.TinyMVVM
             TPage page = TinyIOC.Container.Resolve<TPage>();
             ViewModelResolver.BindingPageModel(page, viewModel, parameters: parameters);
             await PushPageModelWithPage(page, viewModel, modal, animate);
+        }
+
+        public Task PushViewModel(Type viewModelType, Type pageType, bool modal = false, bool animate = true)
+        {
+            var viewModel = TinyIOC.Container.Resolve(viewModelType) as TinyViewModel;
+            var page = TinyIOC.Container.Resolve(pageType) as Page;
+            ViewModelResolver.BindingPageModel(page, viewModel);
+            return PushPageModelWithPage(page, viewModel, modal, animate);
+        }
+
+        public Task PushViewModel(Type viewModelType, Type pageType, object data, bool modal = false, bool animate = true)
+        {
+            var viewModel = TinyIOC.Container.Resolve(viewModelType) as TinyViewModel;
+            var page = TinyIOC.Container.Resolve(pageType) as Page;
+            ViewModelResolver.BindingPageModel(page, viewModel, data);
+            return PushPageModelWithPage(page, viewModel, modal, animate);
+        }
+
+        public Task PushViewModel(Type viewModelType, Type pageType, NavigationParameters parameters, bool modal = false, bool animate = true)
+        {
+            var viewModel = TinyIOC.Container.Resolve(viewModelType) as TinyViewModel;
+            var page = TinyIOC.Container.Resolve(pageType) as Page;
+            ViewModelResolver.BindingPageModel(page, viewModel, parameters: parameters);
+            return PushPageModelWithPage(page, viewModel, modal, animate);
         }
 
         private async Task PushPageModelWithPage(Page page, TinyViewModel viewodel, bool modal = false, bool animate = true)
