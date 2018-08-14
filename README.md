@@ -28,8 +28,8 @@ This Framework, while simple, is also powerful and uses a Convention over Config
 
 ### Rules of naming ViewModel and Page
 
-- A ViewModel's name must end with ViewModel
-- A Page's name name must end with Page
+- A ViewModel's name must end with ViewModel and have namespace begin with YourNamepace.ViewModels
+- A Page's name name must end with Page and have namespace begin with YourNamepace.Views
 
 ### How to use
 
@@ -72,7 +72,7 @@ Within the PushPage and PopPage you can do any type of navigation that you like,
 
 ###### Pass object to next page.
 
-You can pass many object via data in PushViewModel methods.
+You can pass object via data in PushViewModel methods.
 
 ```csharp
     Task PushViewModel<T>(object data, bool modal = false, bool animate = true) where T : TinyViewModel;
