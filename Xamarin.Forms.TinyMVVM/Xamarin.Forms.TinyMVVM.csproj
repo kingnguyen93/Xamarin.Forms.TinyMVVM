@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>Xamarin.Forms.TinyMVVM</PackageId>
-    <PackageVersion>1.0.6</PackageVersion>
+    <PackageVersion>1.0.7</PackageVersion>
     <Authors>King Nguyen</Authors>
     <Description>TinyMVVM library for Xamarin Forms</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
@@ -11,7 +11,7 @@
     <Copyright>Copyright 2018 (c) ERP Solution Corporation. All rights reserved.</Copyright>
     <PackageTags>xamarin forms mvvm Xamarin.Forms.TinyMVVM</PackageTags>
     <PackageProjectUrl>https://github.com/kingnguyen1993/Xamarin.Forms.TinyMVVM</PackageProjectUrl>
-    <Version>1.0.6</Version>
+    <Version>1.0.7</Version>
     <NeutralLanguage>en</NeutralLanguage>
   </PropertyGroup>
 

@@ -1,9 +1,73 @@
 ﻿using System;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Xamarin.Forms.TinyMVVM
 {
+    public sealed class AwaitCommand<T> : AwaitCommand
+    {
+        /// <summary>
+        /// NB* This command waits until you call SetResult on the TaskCompletionSource. The return
+        /// value on the TaskCompletionSource is not used.
+        /// </summary>
+        /// <param name="execute">Execute.</param>
+        public AwaitCommand(Action<T, TaskCompletionSource<bool>> execute)
+            : base((o, tcs) =>
+            {
+                if (IsValidParameter(o))
+                {
+                    execute((T)o, tcs);
+                }
+            })
+        {
+            if (execute == null)
+            {
+                throw new ArgumentNullException(nameof(execute));
+            }
+        }
+
+        /// <summary>
+        /// NB* This command waits until you call SetResult on the TaskCompletionSource. The return
+        /// value on the TaskCompletionSource is not used.
+        /// </summary>
+        /// <param name="execute">Execute.</param>
+        public AwaitCommand(Action<T, TaskCompletionSource<bool>> execute, Func<T, bool> canExecute)
+            : base((o, tcs) =>
+            {
+                if (IsValidParameter(o))
+                {
+                    execute((T)o, tcs);
+                }
+            }, o => IsValidParameter(o) && canExecute((T)o))
+        {
+            if (execute == null)
+                throw new ArgumentNullException(nameof(execute));
+            if (canExecute == null)
+                throw new ArgumentNullException(nameof(canExecute));
+        }
+
+        private static bool IsValidParameter(object o)
+        {
+            if (o != null)
+            {
+                // The parameter isn't null, so we don't have to worry whether null is a valid option
+                return o is T;
+            }
+
+            var t = typeof(T);
+
+            // The parameter is null. Is T Nullable?
+            if (Nullable.GetUnderlyingType(t) != null)
+            {
+                return true;
+            }
+
+            // Not a Nullable, if it's a value type then null is not valid
+            return !t.GetTypeInfo().IsValueType;
+        }
+    }
+
     /// <summary>
     /// AwaitCommand is designed to avoid the double tap issue in Xamarin.Forms for Android,
     /// in Xamarin.Forms it's a common issue that double taps on command would open the same window multiple times.
@@ -109,9 +173,7 @@ namespace Xamarin.Forms.TinyMVVM
         {
             try
             {
-                var changed = CanExecuteChanged;
-
-                changed?.Invoke(this, EventArgs.Empty);
+                CanExecuteChanged?.Invoke(this, EventArgs.Empty);
             }
             catch
             {
