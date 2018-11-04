@@ -42,6 +42,7 @@ namespace Xamarin.Forms.TinyMVVM
 
         public static Page ResolveViewModel(TinyViewModel viewModel, object data = null, NavigationParameters parameters = null)
         {
+            //TinyIOC.Container.BuildUp(ref viewModel);
             var pageName = ViewModelMapper.GetPageTypeName(viewModel.GetType());
             var pageType = Type.GetType(pageName);
             if (pageType == null)

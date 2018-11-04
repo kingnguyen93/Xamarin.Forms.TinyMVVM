@@ -19,6 +19,8 @@ namespace Xamarin.Forms.TinyMVVM
             where RegisterType : class
             where RegisterImplementation : class, RegisterType;
 
+        void BuildUp<ResolveType>(ref ResolveType input) where ResolveType : class;
+
         void Unregister<RegisterType>();
 
         void Unregister<RegisterType>(string name);

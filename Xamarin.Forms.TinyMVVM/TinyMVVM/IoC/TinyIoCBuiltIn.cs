@@ -28,12 +28,16 @@ namespace Xamarin.Forms.TinyMVVM
 
         public ResolveType Resolve<ResolveType>(string name) where ResolveType : class
         {
-            return TinyIoCContainer.Current.Resolve<ResolveType>(name);
+            var result = TinyIoCContainer.Current.Resolve<ResolveType>(name);
+            BuildUp(ref result);
+            return result;
         }
 
         public ResolveType Resolve<ResolveType>() where ResolveType : class
         {
-            return TinyIoCContainer.Current.Resolve<ResolveType>();
+            var result = TinyIoCContainer.Current.Resolve<ResolveType>();
+            BuildUp(ref result);
+            return result;
         }
 
         public IRegisterOptions Register<RegisterType, RegisterImplementation>()
@@ -45,7 +49,14 @@ namespace Xamarin.Forms.TinyMVVM
 
         public object Resolve(Type resolveType)
         {
-            return TinyIoCContainer.Current.Resolve(resolveType);
+            var result = TinyIoCContainer.Current.Resolve(resolveType);
+            BuildUp(ref result);
+            return result;
+        }
+
+        public void BuildUp<ResolveType>(ref ResolveType input) where ResolveType : class
+        {
+            TinyIoCContainer.Current.BuildUp(input);
         }
 
         public void Unregister<RegisterType>()

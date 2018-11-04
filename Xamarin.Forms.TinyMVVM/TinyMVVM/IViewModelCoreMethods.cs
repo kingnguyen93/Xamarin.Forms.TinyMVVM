@@ -25,7 +25,7 @@ namespace Xamarin.Forms.TinyMVVM
 
         Task PushViewModel(Type viewModelType, bool modal = false, bool animate = true);
 
-        Task PushViewModel(Type viewModelType, object data = null, bool modal = false, bool animate = true);
+        Task PushViewModel(Type viewModelType, object data, bool modal = false, bool animate = true);
 
         Task PushViewModel(Type viewModelType, NavigationParameters parameters, bool modal = false, bool animate = true);
 

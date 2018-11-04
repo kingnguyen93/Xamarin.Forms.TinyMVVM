@@ -3457,7 +3457,7 @@ namespace TinyIoC
         private void BuildUpInternal(object input, ResolveOptions resolveOptions)
         {
             var properties = from property in input.GetType().GetProperties()
-                             where (property.GetGetMethod() != null) && (property.GetSetMethod() != null) && !property.PropertyType.IsValueType()
+                             where (property.GetGetMethod() != null) && (property.GetSetMethod() != null) && !property.PropertyType.IsValueType() && property.GetCustomAttributes(typeof(TinyIoCInjectAttribute), true).Any()
                              select property;
 
             foreach (var property in properties)
