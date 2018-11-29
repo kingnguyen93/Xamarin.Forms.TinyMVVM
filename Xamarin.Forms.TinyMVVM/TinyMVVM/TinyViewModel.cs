@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 
 namespace Xamarin.Forms.TinyMVVM
 {
-    public class TinyViewModel : IDisposable, INotifyPropertyChanged
+    public class TinyViewModel : INotifyPropertyChanged
     {
         private NavigationPage _navigationPage;
 
@@ -135,10 +135,6 @@ namespace Xamarin.Forms.TinyMVVM
         /// This method is called when a page is Pop'd.
         /// </summary>
         public virtual void OnPopped()
-        {
-        }
-
-        public void Dispose()
         {
         }
 
