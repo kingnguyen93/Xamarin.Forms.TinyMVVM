@@ -15,13 +15,32 @@ namespace Xamarin.Forms.TinyMVVM
             for (int i = 0; i < properties2.Length; i++)
             {
                 Expression<Func<T, TProperty>> expression = properties2[i];
-                propertyNames.Add(expression.GetPropertyInfo<T, TProperty>().Name, expression.Compile());
+                propertyNames.Add(expression.GetPropertyInfo().Name, expression.Compile());
             }
             source.PropertyChanged += (object sender, PropertyChangedEventArgs e) =>
             {
                 if (propertyNames.ContainsKey(e.PropertyName))
                 {
                     action(e.PropertyName);
+                }
+            };
+        }
+
+        public static void WhenAny<T, TProperty>(this T source, Action<object, string> action, params Expression<Func<T, TProperty>>[] properties) where T : INotifyPropertyChanged
+        {
+            Dictionary<string, Func<T, TProperty>> propertyNames = new Dictionary<string, Func<T, TProperty>>();
+
+            for (int i = 0; i < properties.Length; i++)
+            {
+                Expression<Func<T, TProperty>> expression = properties[i];
+                propertyNames.Add(expression.GetPropertyInfo().Name, expression.Compile());
+            }
+
+            source.PropertyChanged += (sender, e) =>
+            {
+                if (propertyNames.ContainsKey(e.PropertyName))
+                {
+                    action(source, e.PropertyName);
                 }
             };
         }
@@ -39,8 +58,7 @@ namespace Xamarin.Forms.TinyMVVM
             if (property == null)
                 throw new ArgumentNullException("property");
 
-            var body = property.Body as MemberExpression;
-            if (body == null)
+            if (!(property.Body is MemberExpression body))
                 throw new ArgumentException("Expression is not a property", "property");
 
             var propertyInfo = body.Member as PropertyInfo;

@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 
 namespace Xamarin.Forms.TinyMVVM
 {
-    public class TinyViewModel : INotifyPropertyChanged
+    public class TinyViewModel : IDisposable, INotifyPropertyChanged
     {
         private NavigationPage _navigationPage;
 
@@ -101,24 +101,11 @@ namespace Xamarin.Forms.TinyMVVM
         {
         }
 
-        ~TinyViewModel()
-        {
-            OnDisposed();
-        }
-
         /// <summary>
         /// This method is called when the ViewModel is loaded, the initData is the data that's sent from ViewModel before
         /// </summary>
         /// <param name="data">Data that's sent to this PageModel from the pusher</param>
         public virtual void Init(object data)
-        {
-        }
-
-        /// <summary>
-        /// This method is called when a page is Pop'd, it also allows for data to be returned.
-        /// </summary>
-        /// <param name="returnedData">This data that's returned from </param>
-        public virtual void ReverseInit(object returnedData)
         {
         }
 
@@ -137,16 +124,21 @@ namespace Xamarin.Forms.TinyMVVM
         }
 
         /// <summary>
+        /// This method is called when a page is Pop'd, it also allows for data to be returned.
+        /// </summary>
+        /// <param name="returnedData">This data that's returned from </param>
+        public virtual void ReverseInit(object returnedData)
+        {
+        }
+
+        /// <summary>
         /// This method is called when a page is Pop'd.
         /// </summary>
         public virtual void OnPopped()
         {
         }
 
-        /// <summary>
-        /// This method is called at destructor.
-        /// </summary>
-        public virtual void OnDisposed()
+        public void Dispose()
         {
         }
 
@@ -169,8 +161,7 @@ namespace Xamarin.Forms.TinyMVVM
         /// </summary>
         private void AttachPageWasPoppedEvent()
         {
-            var navPage = (CurrentPage.Parent as NavigationPage);
-            if (navPage != null)
+            if (CurrentPage.Parent is NavigationPage navPage)
             {
                 _navigationPage = navPage;
                 _alreadyAttached = true;
@@ -178,25 +169,30 @@ namespace Xamarin.Forms.TinyMVVM
             }
         }
 
+        protected bool IsDisposing;
+
         private void HandleNavPagePopped(object sender, NavigationEventArgs e)
         {
             if (e.Page == CurrentPage)
             {
                 RaisePageWasPopped();
-                OnPopped();
             }
         }
 
         public void RaisePageWasPopped()
         {
+            IsDisposing = true;
+
+            OnPopped();
             PageWasPopped?.Invoke(this, EventArgs.Empty);
             ReleaseResource();
+
+            IsDisposing = false;
         }
 
         private void ReleaseResource()
         {
-            var navPage = (CurrentPage.Parent as NavigationPage);
-            if (navPage != null)
+            if (CurrentPage.Parent is NavigationPage navPage)
                 navPage.Popped -= HandleNavPagePopped;
 
             if (_navigationPage != null)
