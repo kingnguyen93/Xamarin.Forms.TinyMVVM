@@ -1,4 +1,6 @@
-﻿namespace Xamarin.Forms.TinyMVVM
+﻿using System.Linq;
+
+namespace Xamarin.Forms.TinyMVVM
 {
     public static class PageExtensions
     {
@@ -22,6 +24,16 @@
                 if (viewModel != null)
                     viewModel.RaisePageWasPopped();
             }
+        }
+
+        public static bool IsModal(this Page page)
+        {
+            for (int i = 0; i < page.Navigation.ModalStack.Count(); i++)
+            {
+                if (page == page.Navigation.ModalStack[i])
+                    return true;
+            }
+            return false;
         }
     }
 }

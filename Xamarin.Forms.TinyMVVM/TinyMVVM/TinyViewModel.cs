@@ -11,6 +11,16 @@ namespace Xamarin.Forms.TinyMVVM
         private NavigationPage _navigationPage;
 
         /// <summary>
+        /// Used when a page is shown modal and wants a new Navigation Stack
+        /// </summary>
+        public string CurrentNavigationServiceName = Constants.DefaultNavigationServiceName;
+
+        /// <summary>
+        /// Used when a page is shown modal and wants a new Navigation Stack
+        /// </summary>
+        public string PreviousNavigationServiceName;
+
+        /// <summary>
         /// This event is raise when a page is Popped, this might not be raise everytime a page is Popped.
         /// Note* this might be raised multiple times.
         /// </summary>
@@ -42,27 +52,19 @@ namespace Xamarin.Forms.TinyMVVM
         public NavigationParameters Parameters { get; set; } = new NavigationParameters();
 
         /// <summary>
-        /// Is true when this model is the first of a new navigation stack
+        /// This means the current ViewModel is shown modally and can be pop'd modally
         /// </summary>
-        internal bool IsModalFirstChild;
+        public bool IsModal;
 
         /// <summary>
-        /// Used when a page is shown modal and wants a new Navigation Stack
+        /// Is true when this modal is the first of a new navigation stack
         /// </summary>
-        public string CurrentNavigationServiceName = Constants.DefaultNavigationServiceName;
-
-        /// <summary>
-        /// Used when a page is shown modal and wants a new Navigation Stack
-        /// </summary>
-        public string PreviousNavigationServiceName;
+        public bool IsModalFirstChild;
 
         /// <summary>
         /// This means the current ViewModel is shown modally and can be pop'd modally
         /// </summary>
-        public bool IsModalAndHasPreviousNavigationStack()
-        {
-            return !string.IsNullOrWhiteSpace(PreviousNavigationServiceName) && PreviousNavigationServiceName != CurrentNavigationServiceName;
-        }
+        public bool IsModalAndHasPreviousNavigationStack => !string.IsNullOrWhiteSpace(PreviousNavigationServiceName) && PreviousNavigationServiceName != CurrentNavigationServiceName;
 
         private bool isBusy = false;
 

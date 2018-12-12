@@ -38,13 +38,13 @@ namespace Xamarin.Forms.TinyMVVM
         public async Task PushPage<TPage>(bool modal = false, bool animate = true) where TPage : Page
         {
             TPage page = TinyIOC.Container.Resolve<TPage>();
-            await PushPage(page);
+            await PushPage(page, modal, animate);
         }
 
         public async Task PushPage(Type pageType, bool modal = false, bool animate = true)
         {
             var page = TinyIOC.Container.Resolve(pageType) as Page;
-            await PushPage(page);
+            await PushPage(page, modal, animate);
         }
 
         public async Task PushPage(Page page, bool modal = false, bool animate = true)
@@ -163,6 +163,8 @@ namespace Xamarin.Forms.TinyMVVM
             if (string.IsNullOrWhiteSpace(viewodel.PreviousNavigationServiceName))
                 viewodel.PreviousNavigationServiceName = currentViewModel.PreviousNavigationServiceName;
 
+            viewodel.IsModal = modal;
+
             await TinyIOC.Container.Resolve<INavigationService>(viewodel.CurrentNavigationServiceName).PushPage(page, modal, animate);
         }
 
@@ -229,21 +231,6 @@ namespace Xamarin.Forms.TinyMVVM
             return PushNewNavigationServiceModal(newNavigationService, new TinyViewModel[] { basePageModels }, animate);
         }
 
-        public async Task PushNewNavigationServiceModal(INavigationService newNavigationService, TinyViewModel[] basePageModels, bool animate = true)
-        {
-            if (!(newNavigationService is Page navPage))
-                throw new Exception("Navigation service is not Page");
-
-            foreach (var pageModel in basePageModels)
-            {
-                pageModel.CurrentNavigationServiceName = newNavigationService.NavigationServiceName;
-                pageModel.PreviousNavigationServiceName = currentViewModel.CurrentNavigationServiceName;
-                pageModel.IsModalFirstChild = true;
-            }
-
-            await TinyIOC.Container.Resolve<INavigationService>(currentViewModel.CurrentNavigationServiceName).PushPage(navPage, true, animate);
-        }
-
         public Task PushNewNavigationServiceModal(MasterDetailNavigationContainer masterDetailContainer, TinyViewModel basePageModel = null, bool animate = true)
         {
             var models = masterDetailContainer.Pages.Select(o =>
@@ -258,6 +245,21 @@ namespace Xamarin.Forms.TinyMVVM
                 models.Add(basePageModel);
 
             return PushNewNavigationServiceModal(masterDetailContainer, models.ToArray(), animate);
+        }
+
+        public async Task PushNewNavigationServiceModal(INavigationService newNavigationService, TinyViewModel[] basePageModels, bool animate = true)
+        {
+            if (!(newNavigationService is Page navPage))
+                throw new Exception("Navigation service is not Page");
+
+            foreach (var pageModel in basePageModels)
+            {
+                pageModel.CurrentNavigationServiceName = newNavigationService.NavigationServiceName;
+                pageModel.PreviousNavigationServiceName = currentViewModel.CurrentNavigationServiceName;
+                pageModel.IsModalFirstChild = true;
+            }
+
+            await TinyIOC.Container.Resolve<INavigationService>(currentViewModel.CurrentNavigationServiceName).PushPage(navPage, true, animate);
         }
 
         public async Task PopModalNavigationService(bool animate = true)
