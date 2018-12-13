@@ -11,14 +11,19 @@ namespace Xamarin.Forms.TinyMVVM
         private NavigationPage _navigationPage;
 
         /// <summary>
-        /// Used when a page is shown modal and wants a new Navigation Stack
+        /// To be added
         /// </summary>
         public string CurrentNavigationServiceName = Constants.DefaultNavigationServiceName;
 
         /// <summary>
-        /// Used when a page is shown modal and wants a new Navigation Stack
+        /// To be added
         /// </summary>
         public string PreviousNavigationServiceName;
+
+        /// <summary>
+        /// The previous view model, that's automatically filled, on push
+        /// </summary>
+        public TinyViewModel PreviousViewModel { get; set; }
 
         /// <summary>
         /// This event is raise when a page is Popped, this might not be raise everytime a page is Popped.
@@ -30,11 +35,6 @@ namespace Xamarin.Forms.TinyMVVM
         /// This property is used by the TinyContentPage and allows you to set the toolbar items on the page.
         /// </summary>
         public ObservableCollection<ToolbarItem> ToolbarItems { get; set; }
-
-        /// <summary>
-        /// The previous view model, that's automatically filled, on push
-        /// </summary>
-        public TinyViewModel PreviousViewModel { get; set; }
 
         /// <summary>
         /// A reference to the current page, that's automatically filled, on push
@@ -54,12 +54,12 @@ namespace Xamarin.Forms.TinyMVVM
         /// <summary>
         /// This means the current ViewModel is shown modally and can be pop'd modally
         /// </summary>
-        public bool IsModal;
+        public bool IsModal { get; set; }
 
         /// <summary>
         /// Is true when this modal is the first of a new navigation stack
         /// </summary>
-        public bool IsModalFirstChild;
+        public bool IsModalFirstChild { get; set; }
 
         /// <summary>
         /// This means the current ViewModel is shown modally and can be pop'd modally
