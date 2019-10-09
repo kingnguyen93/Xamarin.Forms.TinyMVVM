@@ -2,7 +2,7 @@
 
 namespace TinyIoC
 {
-    public class TinyIoCInjectAttribute : Attribute
+    public sealed class TinyIoCInjectAttribute : Attribute
     {
     }
 }

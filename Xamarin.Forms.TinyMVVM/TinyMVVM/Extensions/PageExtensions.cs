@@ -1,24 +1,33 @@
 ﻿using System.Linq;
 
-namespace Xamarin.Forms.TinyMVVM
+using Xamarin.Forms;
+
+namespace TinyMVVM.Extensions
 {
-    public static class PageExtensions
+    public static class PageExtension
     {
         public static TinyViewModel GetModel(this Page page)
         {
             return page.BindingContext as TinyViewModel;
         }
 
+        public static bool TryGetModel(this Page page, out TinyViewModel viewModel)
+        {
+            viewModel = page.BindingContext as TinyViewModel;
+
+            return viewModel != null;
+        }
+
         public static void NotifyAllChildrenPopped(this NavigationPage navigationPage)
         {
-            foreach (var page in navigationPage.Navigation.ModalStack)
+            foreach (var page in navigationPage.Navigation.NavigationStack)
             {
                 var viewModel = page.GetModel();
                 if (viewModel != null)
                     viewModel.RaisePageWasPopped();
             }
 
-            foreach (var page in navigationPage.Navigation.NavigationStack)
+            foreach (var page in navigationPage.Navigation.ModalStack)
             {
                 var viewModel = page.GetModel();
                 if (viewModel != null)
@@ -34,6 +43,17 @@ namespace Xamarin.Forms.TinyMVVM
                     return true;
             }
             return false;
+        }
+
+        public static NavigationPage OnNavigatedTo(this NavigationPage navigationPage, NavigationParameters parameters)
+        {
+            if (navigationPage.RootPage.BindingContext is TinyViewModel viewModel)
+            {
+                viewModel.OnNavigatedToAsync(parameters);
+                viewModel.OnNavigatedTo(parameters);
+            }
+
+            return navigationPage;
         }
     }
 }

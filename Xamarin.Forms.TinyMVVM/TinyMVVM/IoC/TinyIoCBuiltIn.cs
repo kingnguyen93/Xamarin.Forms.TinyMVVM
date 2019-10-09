@@ -1,20 +1,14 @@
 ﻿using System;
 using TinyIoC;
 
-namespace Xamarin.Forms.TinyMVVM
+namespace TinyMVVM.IoC
 {
     /// <summary>
     /// Built in TinyIOC for ease of use
     /// </summary>
-    public class TinyIOCBuiltIn : ITinyIOC
+    public class TinyIoCBuiltIn : ITinyIoCBuiltIn
     {
-        public static TinyIoCContainer Current
-        {
-            get
-            {
-                return TinyIoCContainer.Current;
-            }
-        }
+        public static TinyIoCContainer Current => TinyIoCContainer.Current;
 
         public IRegisterOptions Register<RegisterType>(RegisterType instance, string name) where RegisterType : class
         {
@@ -67,6 +61,12 @@ namespace Xamarin.Forms.TinyMVVM
         public void Unregister<RegisterType>(string name)
         {
             TinyIoCContainer.Current.Unregister<RegisterType>(name);
+        }
+
+        public ITinyIoCBuiltIn Register(Type from, Type to, string name)
+        {
+            TinyIoCContainer.Current.Register(from, to, name);
+            return this;
         }
     }
 }

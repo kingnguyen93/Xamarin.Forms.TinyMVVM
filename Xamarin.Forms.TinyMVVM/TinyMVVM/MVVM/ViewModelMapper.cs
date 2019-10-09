@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Xamarin.Forms.TinyMVVM
+namespace TinyMVVM
 {
-    public class ViewModelMapper
+    public static class ViewModelMapper
     {
         public static string GetPageTypeName(Type viewModelType)
         {

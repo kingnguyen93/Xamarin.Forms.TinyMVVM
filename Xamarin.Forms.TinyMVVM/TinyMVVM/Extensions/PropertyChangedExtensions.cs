@@ -4,9 +4,9 @@ using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Xamarin.Forms.TinyMVVM
+namespace TinyMVVM.Extensions
 {
-    public static class PropertyChangedExtensions
+    public static class PropertyChangedExtension
     {
         public static void WhenAny<T, TProperty>(this T source, Action<string> action, params Expression<Func<T, TProperty>>[] properties) where T : INotifyPropertyChanged
         {
@@ -56,14 +56,14 @@ namespace Xamarin.Forms.TinyMVVM
         public static PropertyInfo GetPropertyInfo<TSource, TValue>(this Expression<Func<TSource, TValue>> property)
         {
             if (property == null)
-                throw new ArgumentNullException("property");
+                throw new ArgumentNullException(nameof(property));
 
             if (!(property.Body is MemberExpression body))
-                throw new ArgumentException("Expression is not a property", "property");
+                throw new ArgumentException("Expression is not a property", nameof(property));
 
             var propertyInfo = body.Member as PropertyInfo;
             if (propertyInfo == null)
-                throw new ArgumentException("Expression is not a property", "property");
+                throw new ArgumentException("Expression is not a property", nameof(property));
 
             return propertyInfo;
         }

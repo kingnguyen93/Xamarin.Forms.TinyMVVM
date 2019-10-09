@@ -1,14 +1,14 @@
 ﻿using System.Threading.Tasks;
 
-namespace Xamarin.Forms.TinyMVVM
+using Xamarin.Forms;
+
+namespace TinyMVVM
 {
     public interface INavigationService
     {
         string NavigationServiceName { get; }
 
         Task PushPage(Page page, bool modal = false, bool animate = true);
-
-        Task PushPage(Page page, TinyViewModel model, bool modal = false, bool animate = true);
 
         Task PopPage(bool modal = false, bool animate = true);
 

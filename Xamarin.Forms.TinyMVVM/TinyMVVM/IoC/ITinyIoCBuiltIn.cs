@@ -1,15 +1,17 @@
 ﻿using System;
 using TinyIoC;
 
-namespace Xamarin.Forms.TinyMVVM
+namespace TinyMVVM.IoC
 {
-    public interface ITinyIOC
+    public interface ITinyIoCBuiltIn
     {
         object Resolve(Type resolveType);
 
         IRegisterOptions Register<RegisterType>(RegisterType instance) where RegisterType : class;
 
         IRegisterOptions Register<RegisterType>(RegisterType instance, string name) where RegisterType : class;
+
+        ITinyIoCBuiltIn Register(Type from, Type to, string name);
 
         ResolveType Resolve<ResolveType>() where ResolveType : class;
 

@@ -1,17 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <PackageId>Xamarin.Forms.TinyMVVM</PackageId>
     <PackageVersion>1.1.2</PackageVersion>
     <Authors>King Nguyen</Authors>
     <Description>TinyMVVM library for Xamarin Forms</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageReleaseNotes></PackageReleaseNotes>
-    <Copyright>Copyright 2018 (c) ERP Solution Corporation. All rights reserved.</Copyright>
-    <PackageTags>xamarin forms mvvm Xamarin.Forms.TinyMVVM</PackageTags>
+    <Copyright>Copyright 2018 (c) King Soft Corporation. All rights reserved.</Copyright>
+    <PackageTags>xamarin forms mvvm tiny Xamarin.Forms.TinyMVVM</PackageTags>
     <PackageProjectUrl>https://github.com/kingnguyen1993/Xamarin.Forms.TinyMVVM</PackageProjectUrl>
-    <Version>1.1.2</Version>
+    <Version>2.0.0</Version>
     <NeutralLanguage>en</NeutralLanguage>
   </PropertyGroup>
 
@@ -20,7 +20,23 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Xamarin.Forms" Version="3.4.0.1008975" />
+    <PackageReference Include="Rg.Plugins.Popup" Version="1.2.0.223" />
+    <PackageReference Include="Xamarin.Forms" Version="4.0.0.709238" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="TinyMVVM\Resources\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="TinyMVVM\Resources\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-﻿namespace Xamarin.Forms.TinyMVVM
+﻿namespace TinyMVVM
 {
     public static class Constants
     {

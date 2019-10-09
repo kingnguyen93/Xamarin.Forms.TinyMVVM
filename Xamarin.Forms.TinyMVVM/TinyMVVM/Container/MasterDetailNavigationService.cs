@@ -2,16 +2,20 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using TinyMVVM.Extensions;
+using TinyMVVM.IoC;
 
-namespace Xamarin.Forms.TinyMVVM
+using Xamarin.Forms;
+
+namespace TinyMVVM
 {
     public class MasterDetailNavigationContainer : MasterDetailPage, INavigationService
     {
         public string NavigationServiceName { get; private set; }
 
         private ContentPage menuPage;
-        private ListView listView = new ListView();
-        private List<Page> pagesInner = new List<Page>();
+        private readonly ListView listView = new ListView();
+        private readonly List<Page> pagesInner = new List<Page>();
 
         public Dictionary<string, Page> Pages { get; } = new Dictionary<string, Page>();
 
@@ -23,6 +27,8 @@ namespace Xamarin.Forms.TinyMVVM
 
         public MasterDetailNavigationContainer(string navigationServiceName)
         {
+            listView.SelectionMode = ListViewSelectionMode.None;
+
             NavigationServiceName = navigationServiceName;
             RegisterNavigation();
         }
@@ -30,25 +36,39 @@ namespace Xamarin.Forms.TinyMVVM
         public void Init(string menuTitle, string menuIcon = null)
         {
             CreateMenuPage(menuTitle, menuIcon);
-            RegisterNavigation();
         }
 
         protected virtual void RegisterNavigation()
         {
-            TinyIOC.Container.Register<INavigationService>(this, NavigationServiceName);
+            _ = TinyIoCLocator.Container.Register<INavigationService>(this, NavigationServiceName);
         }
 
         protected virtual void CreateMenuPage(string menuPageTitle, string menuIcon = null)
         {
             listView.ItemsSource = PageNames;
 
-            listView.ItemSelected += (sender, args) =>
+            listView.ItemTapped += (sender, args) =>
             {
-                if (Pages.ContainsKey((string)args.SelectedItem))
+                if (Pages.ContainsKey((string)args.Item))
                 {
-                    var page = Pages[(string)args.SelectedItem];
-                    Detail = page;
-                    page.GetModel().OnPushed();
+                    Detail = Pages[(string)args.Item];
+
+                    if (Detail.GetModel() is TinyViewModel viewModel)
+                    {
+                        Device.BeginInvokeOnMainThread(() =>
+                        {
+                            viewModel.OnNavigatedToAsync(new NavigationParameters());
+                            viewModel.OnNavigatedTo(new NavigationParameters());
+                        });
+                    }
+                    if (Detail is INavigatedAware aware)
+                    {
+                        Device.BeginInvokeOnMainThread(() =>
+                        {
+                            aware.OnNavigatedToAsync(new NavigationParameters());
+                            aware.OnNavigatedTo(new NavigationParameters());
+                        });
+                    }
                 }
 
                 IsPresented = false;
@@ -62,42 +82,47 @@ namespace Xamarin.Forms.TinyMVVM
 
             var navPage = new NavigationPage(menuPage) { Title = "Menu" };
 
-            if (!String.IsNullOrEmpty(menuIcon))
-                navPage.Icon = menuIcon;
+            if (!string.IsNullOrEmpty(menuIcon))
+                navPage.IconImageSource = menuIcon;
 
             Master = navPage;
         }
 
-        public virtual void AddPage<T>(string title, object data = null) where T : TinyViewModel
+        public virtual void AddPage<T>(string title, string icon = null, NavigationParameters parameters = default) where T : TinyViewModel
         {
-            var page = ViewModelResolver.ResolveViewModel<T>(data);
-            AddPage(page, title);
+            AddPage(typeof(T), title, icon, parameters);
         }
 
-        public virtual void AddPage(string modelName, string title, object data = null)
+        public virtual void AddPage(Type pageType, string title, string icon = null, NavigationParameters parameters = default)
         {
-            var pageModelType = Type.GetType(modelName);
-            AddPage(pageModelType, title, data);
+            var page = ViewModelResolver.ResolveViewModel(pageType, parameters);
+            AddPage(page, title, icon, parameters);
         }
 
-        public virtual void AddPage(Type pageType, string title, object data = null)
+        private void AddPage(Page page, string title, string icon = null, NavigationParameters parameters = default)
         {
-            var page = ViewModelResolver.ResolveViewModel(pageType, data);
-            AddPage(page, title);
-        }
-
-        private void AddPage(Page page, string title)
-        {
-            page.GetModel().CurrentNavigationServiceName = NavigationServiceName;
             pagesInner.Add(page);
-            var navigationContainer = CreateContainerPage(page);
-            Pages.Add(title, navigationContainer);
+
+            if (page.GetModel() is TinyViewModel viewModel)
+            {
+                viewModel.CurrentNavigationServiceName = NavigationServiceName;
+            }
+
+            var container = CreateContainerPage(page);
+            container.Title = title;
+            if (icon != null)
+                container.IconImageSource = icon;
+
             PageNames.Add(title);
+            Pages.Add(title, container);
+
             if (Pages.Count == 1)
-                Detail = navigationContainer;
+            {
+                Detail = container;
+            }
         }
 
-        internal Page CreateContainerPageSafe(Page root)
+        private Page CreateContainerPageSafe(Page root)
         {
             if (root is NavigationPage || root is MasterDetailPage || root is TabbedPage)
                 return root;
@@ -110,25 +135,20 @@ namespace Xamarin.Forms.TinyMVVM
             return new NavigationPage(root);
         }
 
-        public Task PushPage(Page page, TinyViewModel model, bool modal = false, bool animate = true)
-        {
-            if (modal)
-                return Navigation.PushModalAsync(CreateContainerPageSafe(page));
-            return (Detail as NavigationPage).PushAsync(page, animate); //TODO: make this better
-        }
-
         public Task PushPage(Page page, bool modal = false, bool animate = true)
         {
             if (modal)
                 return Navigation.PushModalAsync(CreateContainerPageSafe(page));
-            return (Detail as NavigationPage).PushAsync(page, animate); //TODO: make this better
+
+            return Detail.Navigation.PushAsync(page, animate); //TODO: make this better
         }
 
         public Task PopPage(bool modal = false, bool animate = true)
         {
             if (modal)
                 return Navigation.PopModalAsync(animate);
-            return (Detail as NavigationPage).PopAsync(animate); //TODO: make this better
+
+            return Detail.Navigation.PopAsync(animate); //TODO: make this better
         }
 
         public Task PopToRoot(bool animate = true)
@@ -138,26 +158,26 @@ namespace Xamarin.Forms.TinyMVVM
 
         public void NotifyChildrenPageWasPopped()
         {
-            if (Master is NavigationPage)
-                ((NavigationPage)Master).NotifyAllChildrenPopped();
-
             if (Master is INavigationService)
                 ((INavigationService)Master).NotifyChildrenPageWasPopped();
 
             foreach (var page in Pages.Values)
             {
-                if (page is NavigationPage)
-                    ((NavigationPage)page).NotifyAllChildrenPopped();
-
                 if (page is INavigationService)
+                {
                     ((INavigationService)page).NotifyChildrenPageWasPopped();
+                }
+                else if (page is ContentPage)
+                {
+                    if (page.GetModel() is TinyViewModel viewModel)
+                        viewModel.RaisePageWasPopped();
+                }
             }
 
-            if (Pages != null && !Pages.ContainsValue(Detail) && Detail is NavigationPage)
-                ((NavigationPage)Detail).NotifyAllChildrenPopped();
-
             if (Pages != null && !Pages.ContainsValue(Detail) && Detail is INavigationService)
+            {
                 ((INavigationService)Detail).NotifyChildrenPageWasPopped();
+            }
         }
 
         public Task<TinyViewModel> SwitchSelectedRootViewModel<T>() where T : TinyViewModel

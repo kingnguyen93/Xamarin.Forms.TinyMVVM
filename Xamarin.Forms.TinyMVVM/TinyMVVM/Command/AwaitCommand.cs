@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace Xamarin.Forms.TinyMVVM
+namespace TinyMVVM
 {
     public sealed class AwaitCommand<T> : AwaitCommand
     {
@@ -175,8 +176,9 @@ namespace Xamarin.Forms.TinyMVVM
             {
                 CanExecuteChanged?.Invoke(this, EventArgs.Empty);
             }
-            catch
+            catch (Exception ex)
             {
+                Debug.WriteLine(ex);
             }
         }
     }

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace Xamarin.Forms.TinyMVVM
+namespace TinyMVVM
 {
     public class NavigationParameters : IEnumerable<KeyValuePair<string, object>>
     {
@@ -58,7 +58,7 @@ namespace Xamarin.Forms.TinyMVVM
                 if (string.Compare(kvp.Key, key, StringComparison.Ordinal) == 0)
                 {
                     if (kvp.Value == null)
-                        return default(T);
+                        return default;
                     else if (kvp.Value.GetType() == typeof(T))
                         return (T)kvp.Value;
                     else if (typeof(T).GetTypeInfo().IsAssignableFrom(kvp.Value.GetType().GetTypeInfo()))
@@ -68,7 +68,7 @@ namespace Xamarin.Forms.TinyMVVM
                 }
             }
 
-            return default(T);
+            return default;
         }
 
         public bool ContainsKey(string key)
@@ -98,7 +98,7 @@ namespace Xamarin.Forms.TinyMVVM
                 if (string.Compare(kvp.Key, key, StringComparison.Ordinal) == 0)
                 {
                     if (kvp.Value == null)
-                        values.Add(default(T));
+                        values.Add(default);
                     else if (kvp.Value.GetType() == typeof(T))
                         values.Add((T)kvp.Value);
                     else if (typeof(T).GetTypeInfo().IsAssignableFrom(kvp.Value.GetType().GetTypeInfo()))
@@ -118,7 +118,7 @@ namespace Xamarin.Forms.TinyMVVM
                 if (string.Compare(kvp.Key, key, StringComparison.Ordinal) == 0)
                 {
                     if (kvp.Value == null)
-                        value = default(T);
+                        value = default;
                     else if (kvp.Value.GetType() == typeof(T))
                         value = (T)kvp.Value;
                     else if (typeof(T).GetTypeInfo().IsAssignableFrom(kvp.Value.GetType().GetTypeInfo()))
@@ -130,7 +130,7 @@ namespace Xamarin.Forms.TinyMVVM
                 }
             }
 
-            value = default(T);
+            value = default;
             return false;
         }
 
